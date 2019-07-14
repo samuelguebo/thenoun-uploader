@@ -1,4 +1,4 @@
-## Wishlist JS
+## Wishlist Vanilla
 Minimalist wishlist app built in Vanilla JS.
 
 
