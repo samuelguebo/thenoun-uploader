@@ -1,35 +1,38 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
+    <title>Wishlist</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-    <section class="container layout-centered">
-      <section class="col-sm-6">
+    <section class="container">
+      <section class="layout-centered">
         <h2>New entry</h2>
         <form id="results-form">
           <div class="form-group">
-          <label for="username">Username:</label>
+          <label for="username">Product:</label>
           <input type="text" class="form-control"
-            id="username" name="username" value="Elfix">
+            id="username" name="username" value="Buy jeans">
           </div>
           <button id="btn-search" type="submit" class="btn btn-primary">
             <i class="fa fa-plus"></i> Create</button>
           <strong id="notification"></strong>
         </form>
 
-        <h2>Results</h2>
+        <hr class="separator">
+
+        <h2>Wishlist</h2>
     		<table id="results-table" class="table table-striped">
     			<thead>
     				<tr>
     					<th>ID</th>
-    					<th>Username</th>
+    					<th>Product</th>
     					<th>Timestamp</th>
     					<th></th>
     				</tr>
@@ -45,7 +48,7 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
 
   </body>
 </html>
