@@ -34,21 +34,30 @@ function handleCreation() {
           if the request is successful */
           fetch(apiUrl + "/product", {
             method: "POST",
-            body: { title: username, status: "PENDING" }
-          }).then( response => response.json())
-          .then((product) => {
-
-            // append product to table
-            addRowToTable(product)
+            body: JSON.stringify({ 
+                "title": title, 
+                "content": "PENDING", 
+                "status": "PENDING" 
+                
+              }
+            )
+          })
+          .then(data => data.json())
+          .then(products =>  {
             
-            // clear input content
-            form.querySelector( "input[name=title]" ).value = ""
+            // append product to table
+            if(products.length > 0) {
+              var product = products[0];
+              addRowToTable(product)
+              
+              // clear input content
+              form.querySelector( "input[name=title]" ).value = ""
 
-            // re-attach deletion listener
-            handleDeletion();
+              // re-attach deletion listener
+              handleDeletion();
+            }
 
-
-          }) 
+          })
          
     }
     e.preventDefault();
@@ -66,7 +75,6 @@ function handleCreation() {
       var tableRow = deletions[i];
       tableRow.addEventListener ('click',
       function( e ) {
-        console.log( e + " clicked" )
         this.closest( 'tr' ).remove()
       })
     }
