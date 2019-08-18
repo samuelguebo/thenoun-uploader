@@ -14,7 +14,16 @@ var apiUrl = "http://localhost/php-restapi-vanilla"
 var form = document.getElementById( "results-form" )
 var table = document.getElementById( "results-table" ).querySelector( "tbody" )
 
+loadActualData();
 handleCreation();
+
+/**
+ * Populate table with actual 
+ * data from API
+ */
+function loadActualData() {
+  
+}
 
 /**
  * Wrapper function for handling
@@ -30,34 +39,37 @@ function handleCreation() {
     var title = form.querySelector( "input[name=title]" ).value;
     if( title !== "" ){
 
-        /* Make call to API and change table
-          if the request is successful */
-          fetch(apiUrl + "/product", {
-            method: "POST",
-            body: JSON.stringify({ 
-                "title": title, 
-                "content": "PENDING", 
-                "status": "PENDING" 
-                
-              }
-            )
-          })
-          .then(data => data.json())
-          .then(products =>  {
-            
-            // append product to table
-            if(products.length > 0) {
-              var product = products[0];
-              addRowToTable(product)
+      /* Make call to API and change table
+        if the request is successful */
+        fetch(apiUrl + "/product", {
+          method: "POST",
+          body: JSON.stringify({ 
+              "title": title, 
+              "content": "PENDING", 
+              "status": "PENDING" 
               
-              // clear input content
-              form.querySelector( "input[name=title]" ).value = ""
-
-              // re-attach deletion listener
-              handleDeletion();
             }
+          )
+        })
+        .then(data => data.json())
+        .then(data =>  {
+          // append product to table
+          var products = data.result; 
+          if(products.length > 0) {
+            var product = products[0];
+            console.log(product)
+            addRowToTable(product)
+            
+            // clear input content
+            form.querySelector( "input[name=title]" ).value = ""
 
-          })
+            // re-attach deletion listener
+            handleDeletion();
+          } else {
+            console.log(`product has ${products.length} items`)
+          }
+
+        })
          
     }
     e.preventDefault();
@@ -70,12 +82,23 @@ function handleCreation() {
    */
   function handleDeletion() {
     var deletions = document.getElementsByClassName( "action-delete" )
+    
     // Listen to deletion buttion clicks
     for ( var i = 0; i < deletions.length; i++ ) {
       var tableRow = deletions[i];
       tableRow.addEventListener ('click',
+      
       function( e ) {
-        this.closest( 'tr' ).remove()
+        var id = this.closest('td').attr('id')
+        fetch(apiUrl + `/product/{id}`, 
+        {
+          method: 'DELETE',
+          body: JSON.stringify({ "id": id })
+        }).then(data => data.json())
+        .then(products => {
+          this.closest( 'tr' ).remove()
+        }).catch(error => { console.log(e) })
+        
       })
     }
 
@@ -91,7 +114,7 @@ function handleCreation() {
     var rowHTML = "<td>" + ( count++ ) + "</td>"
         rowHTML += "<td>" + product.title + "</td>"
         rowHTML += "<td>" + product.pubDate + "</td>"
-        rowHTML += "<td><i class='btn btn-small btn-primary action-delete'>"
+        rowHTML += "<td id='"+product.id +"'><i class='btn btn-small btn-primary action-delete'>"
         rowHTML += "x</i></td>"
     row.innerHTML = rowHTML
     table.append( row )
