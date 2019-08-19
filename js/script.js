@@ -14,15 +14,29 @@ var apiUrl = "http://localhost/php-restapi-vanilla"
 var form = document.getElementById( "results-form" )
 var table = document.getElementById( "results-table" ).querySelector( "tbody" )
 
+
 loadActualData();
 handleCreation();
+
+
 
 /**
  * Populate table with actual 
  * data from API
  */
 function loadActualData() {
-  
+  fetch(apiUrl + "/product")
+  .then(response => response.json())
+  .then(data => {
+    var products = data.result;
+    for (var i = 0; i < products.length; i++) {
+      var product = products[i];
+      addRowToTable(product);
+    }
+
+    // set deletion listener
+    handleDeletion();
+  })
 }
 
 /**
@@ -57,7 +71,7 @@ function handleCreation() {
           var products = data.result; 
           if(products.length > 0) {
             var product = products[0];
-            console.log(product)
+            // console.log(product)
             addRowToTable(product)
             
             // clear input content
@@ -74,6 +88,7 @@ function handleCreation() {
     }
     e.preventDefault();
   })
+}
 
   /**
    * Wrapper function for handling
@@ -89,15 +104,14 @@ function handleCreation() {
       tableRow.addEventListener ('click',
       
       function( e ) {
-        var id = this.closest('td').attr('id')
-        fetch(apiUrl + `/product/{id}`, 
-        {
-          method: 'DELETE',
-          body: JSON.stringify({ "id": id })
-        }).then(data => data.json())
+        var id = this.closest('td').getAttribute('id')
+        
+        fetch(apiUrl + `/product/${id}`, { method: 'delete'} )
+        .then(response => response.text())
         .then(products => {
           this.closest( 'tr' ).remove()
-        }).catch(error => { console.log(e) })
+        })
+        e.preventDefault();
         
       })
     }
@@ -118,5 +132,4 @@ function handleCreation() {
         rowHTML += "x</i></td>"
     row.innerHTML = rowHTML
     table.append( row )
-  }
 }
