@@ -1,8 +1,6 @@
-## Wishlist Vanilla
+## The Noun Uploader
 Minimalist wishlist app built in Vanilla JS.
 
-# Define endpoint
-* Change API url in `js/scripts.js`
 
 # Contributors 
- * Samuel Guebo ([@samuelguebo](https://samuelguebo.ci))
+ * Samuel Guebo ([@samuelguebo](https://twitter/com/samuelguebo))

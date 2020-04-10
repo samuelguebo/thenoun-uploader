@@ -8,3 +8,7 @@
 hr.separator{
   margin: 30px 0px;
 }
+
+#upload-area #upload-input{
+  display: none;
+}
