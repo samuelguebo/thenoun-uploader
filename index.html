@@ -19,8 +19,13 @@
       <h2>Upload Icons</h2>
       <div class="jumbotron jumbotron-fluid">
         <div id="upload-area" class="container" draggable="true">
-          <p>Drag and drop your files here</p>
-          <input id="upload-input" type="file" class="form-control" multiple="">
+
+          <div id="description">
+            <h2><i class="fa fa-upload"></i></h2>
+            <h4>Drop your .svg files here!</h4>
+            <p>Upload up to 20 images, max 1 MB each.</p>
+          </div>
+          <input id="upload-input" type="file" class="form-control" multiple="" accept=".png, .svg, .jpg, .xls">
         </div>
       </div>
       <a class="btn btn-primary" href="#" role="button">Upload
