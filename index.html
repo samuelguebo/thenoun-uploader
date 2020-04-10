@@ -10,6 +10,7 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
     integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 
@@ -17,13 +18,14 @@
   <section class="container">
     <section class="layout-centered">
       <h2>Upload Icons</h2>
-      <div class="jumbotron jumbotron-fluid">
-        <div id="upload-area" class="container" draggable="true">
-
+      <div id="upload-area" class="jumbotron jumbotron-fluid" draggable="true">
+        <div class="container">
           <div id="description">
-            <h2><i class="fa fa-upload"></i></h2>
+            <center>
+              <h1 class="display-4"><i class="fa fa-upload"></i></h1>
+            </center>
             <h4>Drop your .svg files here!</h4>
-            <p>Upload up to 20 images, max 1 MB each.</p>
+            <span>Upload up to 20 images, max 1 MB each.</span>
           </div>
           <input id="upload-input" type="file" class="form-control" multiple="" accept=".png, .svg, .jpg, .xls">
         </div>

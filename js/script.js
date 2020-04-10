@@ -1,7 +1,9 @@
 import {
     uploadArea,
-    uploadInput
-} from './upload-controls.js'
+    uploadInput,
+    preventDropConflict
+} from './fields.js'
 
-console.log(uploadArea())
-console.log(uploadInput())
+uploadArea()
+uploadInput()
+preventDropConflict()
