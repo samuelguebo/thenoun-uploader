@@ -82,7 +82,7 @@ const handleUpload = (files) => {
         file['name'] = fileName
         let icon = new Icon(file)
         let cleanVersion = icon.getCleanVersion()
-        console.log(icon.getId())
+        console.log(icon.getWikiCode())
     }
 
     reader.readAsText(file)

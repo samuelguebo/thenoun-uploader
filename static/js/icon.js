@@ -16,8 +16,8 @@ class Icon {
         let nodes = this.getNodes()
         let author = nodes.getElementsByTagName('text')
         author = Array.from(author)
-        author = author.map((text) => text.childNodes[0][0].nodeValue)
-        return author
+        author = author.map((text) => text.childNodes[0].nodeValue)
+        return author[0].replace('Created by ', '')
     }
 
     getCleanVersion = () => {
@@ -33,27 +33,38 @@ class Icon {
         return xmlNodes
     }
 
+    getTitle = () => {
+        let fileReg = new RegExp(/(noun_|_\d{3,})/g)
+        let title = this.file.name.replace(fileReg, '')
+        title = title.charAt(0).toUpperCase() + title.slice(1)
+        return title
+    }
+
     getWikiCode = () => {
         let today = new Date()
         let fullYear = today.getFullYear()
         let month = today.getMonth() < 9 ? '0' + (today.getMonth() + 1) : (today.getMonth() + 1)
-        let day = today.getDay() < 9 ? '0' + (today.getDay() + 1) : (today.getDay() + 1)
+        let day = today.getDate() < 9 ? '0' + (today.getDate()) : (today.getDate())
+        let iconId = this.getId()
+        let iconTitle = this.getTitle()
         let authorName = this.getAuthor()
-        let authorLink = `https://thenounproject.com/icon/${iconId}`
-        `=={{int:filedesc}}==
-        {{Information
-        |description={{en|1=${iconTitle} (${iconId}) - The Noun Project.svg}}
-        |date= ${fullYear}-${month}-${day}
-        |source=Noun Project - ${authorLink}
-        |author= [${authorLink} ${authorName}] 
-        |permission=
-        |other versions=
-        }}
-        
-        =={{int:license-header}}==
-        {{Cc-by-sa-3.0}}
-        {{The Noun Project}}
+        let authorLink = `https://thenounproject.com/icon/${iconId}
         `
+        let wikiCode = `=={{int:filedesc}}==\n`
+        wikiCode += `{{Information\n`
+        wikiCode += `|description={{en|1=${iconTitle} (${iconId}) - The Noun Project.svg}}\n`
+        wikiCode += `|date= ${fullYear}-${month}-${day}\n`
+        wikiCode += `|source=Noun Project - ${authorLink}\n`
+        wikiCode += `|author= [${authorLink} ${authorName}]\n`
+        wikiCode += `|permission=\n`
+        wikiCode += `|other versions=\n`
+        wikiCode += `}}\n\n`
+
+        wikiCode += `=={{int:license-header}}==\n`
+        wikiCode += `{{Cc-by-sa-3.0}}\n`
+        wikiCode += `{{The Noun Project}}`
+
+        return wikiCode
     }
 
 

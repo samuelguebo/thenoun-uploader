@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/samuelguebo/wishlist-vanilla#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "connect-livereload": "^0.6.1",
+    "express": "^4.17.1",
+    "passport-mediawiki-oauth": "^0.1.0"
   }
 }
