@@ -11,7 +11,11 @@
   },
   "eslint.enable": true,
   "eslint.alwaysShowStatus": true,
+  "files.associations": {
+    "*.jsx": "javascriptreact"
+  },
   "eslint.validate": [
-    "javascript"
+    "javascript",
+    "javascriptreact"
   ]
 }

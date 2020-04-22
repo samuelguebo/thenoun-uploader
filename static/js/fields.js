@@ -1,8 +1,9 @@
+import Icon from './icon.js'
 /**
  * 
  */
 const getSupportedFormats = () => {
-    return ['image/png', 'image/svg', '']
+    return ['image/svg']
 }
 
 const preventDropConflict = () => {
@@ -66,13 +67,26 @@ const uploadInputAction = () => {
  * @param {*} files 
  */
 const handleUpload = (files) => {
+    /*
     for (let file of files) {
         // Only deal with png
         if (getSupportedFormats().indexOf(file.type) > -1)
             console.log(`name: ${file.name}`)
     }
-}
+    */
+    let file = files[0]
+    const reader = new FileReader();
+    const fileName = file.name
 
+    reader.onload = (file) => {
+        file['name'] = fileName
+        let icon = new Icon(file)
+        let cleanVersion = icon.getCleanVersion()
+        console.log(icon.getId())
+    }
+
+    reader.readAsText(file)
+}
 
 export {
     uploadAreaAction as uploadArea,

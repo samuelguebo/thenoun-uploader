@@ -1,0 +1,23 @@
+{
+  "name": "thenoun-project",
+  "version": "1.0.0",
+  "description": "Minimalist wishlist app built in Vanilla JS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelguebo/wishlist-vanilla.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelguebo/wishlist-vanilla/issues"
+  },
+  "homepage": "https://github.com/samuelguebo/wishlist-vanilla#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
