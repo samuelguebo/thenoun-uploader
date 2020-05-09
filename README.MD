@@ -1,5 +1,5 @@
 ## The Noun Uploader
-Minimalist wishlist app built in Vanilla JS.
+Drag and drop uploader for icons from The Noun project
 
 
 # Contributors 
