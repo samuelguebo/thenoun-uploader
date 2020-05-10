@@ -1,7 +1,7 @@
 /**
  *
  */
-const settings = require('./settings.js')
+const settings = require('../../settings.js')
 const urllib = require('url')
 const oauth = require('oauth-lite')
 const fetch = require('node-fetch')
