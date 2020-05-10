@@ -11,39 +11,32 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
     integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Filepond stylesheet -->
+  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
 </head>
 
 <body>
   <section class="container">
     <section class="layout-centered">
       <h2>Upload Icons</h2>
-      <div id="upload-area" class="jumbotron jumbotron-fluid" draggable="true">
-        <div class="container">
-          <div id="description">
-            <center>
-              <h1 class="display-4"><i class="fa fa-upload"></i></h1>
-            </center>
-            <h4>Drop your .svg files here!</h4>
-            <span>Upload up to 20 images, max 1 MB each.</span>
-          </div>
-          <input id="upload-input" type="file" class="form-control" multiple="" accept=".png, .svg, .jpg, .xls">
-        </div>
-      </div>
-      <a class="btn btn-primary" href="#" role="button">Upload
-      </a>
     </section>
+    <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
+      data-max-files="3" type="file">
   </section>
+  <!-- We'll transform this input into a pond -->
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"
-    integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous">
+  <!-- Load FilePond library -->
+  <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+  <!-- Turn all file input elements into ponds -->
+  <script>
+    // Select the file input and use 
+    // create() to turn it into a pond
+    FilePond.create(
+      document.querySelector('input.filepond')
+    );
   </script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
-    integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
-  </script>
-  <script type="module" src="js/script.js"></script>
+
 
 </body>
 
