@@ -15,7 +15,7 @@ router.use('/', function (req, res, next) {
         if (allowedRoutes.indexOf(req.path) > -1) {
             next();
         } else {
-            res.sendFile(path.join(__dirname + '/../../logged-out.html'));
+            res.sendFile(path.join(__dirname + '/../../templates/logged-out.html'));
         }
     }
 });
