@@ -1,10 +1,6 @@
-const settings = require('../../settings.js')
 const express = require('express')
-const path = require('path')
 const WikiOAuth = require('../utils/wiki-auth.js')
-const fetch = require('node-fetch')
 const bodyParser = require('body-parser')
-const session = require('express-session');
 const app = express()
 const router = express.Router();
 
@@ -44,15 +40,15 @@ router.get('/oauth-callback', function (req, res) {
         })
 
         // get CSRF Token
-        .then(data => {
+        .then(() => {
             wikiOauth.getCrsfToken(req)
-                .then(token => {
+                .then(() => {
                     // update isLoggedIn
                     req.session.is_loggedin = true
                     res.redirect("/")
                 })
 
-                .catch(error => res.send('An error occured during authentication. Please try again'))
+                .catch(() => res.send('An error occured during authentication. Please try again'))
 
         })
 
