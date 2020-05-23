@@ -9,7 +9,8 @@ class AuthController extends Controller
      */
     public function login($request)
     {   
-        $mediawiki = new Mediawiki();
+        
+        $mediawiki = new MediaWiki();
         $mediawiki->doAuthorizationRedirect();
     }
 
@@ -18,7 +19,7 @@ class AuthController extends Controller
      */
     public function callback($request)
     {   
-        $mediawiki = new Mediawiki();
+        $mediawiki = new MediaWiki();
         $mediawiki->doEdit();
     }
 
