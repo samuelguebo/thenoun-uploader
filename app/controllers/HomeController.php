@@ -10,7 +10,7 @@ class HomeController extends Controller
      */
     public function index($request = null)
     {
-        require ROOT . "/app/views/index.php";
+        require ROOT . "/app/views/logged-out.php";
     }
 
     /**

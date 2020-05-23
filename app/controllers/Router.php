@@ -28,13 +28,11 @@ class Router
             $endpoint = explode("?", $this->request)[0];
             if ($route['endpoint'] === $endpoint) {
 
-                // Check authorization
-                $this->authMiddleware($route);
-
+                
                 // If class exists, use it
                 if (class_exists($route['controller'])) {
                     $controller = new $route['controller']();
-
+                    $controller->middleWare($route);
                     // Check and select the method to call
                     if (method_exists($controller, $route['method'])) {
                         $method = $route['method'];
@@ -63,16 +61,4 @@ class Router
         );
     }
 
-    /**
-     * Check wether wether user is 
-     * logged in or not
-     */
-    private function authMiddleware($route) {
-
-        if(($route['protected'])){
-            AuthController::unauthorized($this->request);
-            exit();
-        }
-        
-    }
 }
