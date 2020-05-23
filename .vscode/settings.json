@@ -1,21 +1,15 @@
 {
   "files.autoSave": "onFocusChange",
   "git.enabled": true,
-  "prettier.singleQuote": true,
   "editor.formatOnSave": true,
-  "[javascript]": {
+  "[php]": {
     "editor.formatOnSave": true,
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
   "eslint.enable": true,
-  "eslint.alwaysShowStatus": true,
-  "files.associations": {
-    "*.jsx": "javascriptreact"
-  },
   "eslint.validate": [
-    "javascript",
-    "javascriptreact"
+    "php",
   ]
 }
