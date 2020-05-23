@@ -4,47 +4,68 @@
  * incoming request and mapping them
  * to the correct controller
  */
-class Router {
+class Router
+{
 
-    private $controller;
+    private $routes;
+    private $request;
 
     /**
      * Constructor
      */
-    public function __construct() {
-        $this->request = new Request();
-        $this->request->parse();
+    public function __construct($routes, $request)
+    {
+        $this->routes = $routes;
+        $this->request = $request;
     }
     /**
      * Rerouting requests
      */
-    public function  dispatch() {
-        
-        if(isset($this->request->controller)) {
-            $endpoint = ucfirst($this->request->controller);
-            $classname = $endpoint . "Controller";
-            
-                            
-            // If class exists, use it
-            if ( class_exists( $classname ) ) {
-                $controller = new $classname();
-                
-                // Check and select the method to call
-                $method = strtolower($this->request->method);
-                if(method_exists($controller, $method)) {
+    public function dispatch()
+    {
 
-                    // Handle CORS issues
-                    header("Access-Control-Allow-Origin: *");
-                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-                    // passing the request into the method
-                    $controller->$method($this->request);
-                    return;
-                } 
-                
+        foreach ($this->routes as $route) {
+            if ($route == $this->request) {
+                // If class exists, use it
+                if (class_exists($classname)) {
+                    $controller = new $classname();
+
+                    // Check and select the method to call
+                    $method = strtolower($this->request->method);
+                    if (method_exists($controller, $method)) {
+
+                        // passing the request into the method
+                        $controller->$method($this->request);
+                        return;
+                    }
+
+                }
+                return true;
             }
 
-        } 
-        NotFoundController::print();
+        }
+        /*
+        if(isset($this->request->controller)) {
+        $;
+        $classname = $endpoint . "Controller";
+
+        // If class exists, use it
+        if ( class_exists( $classname ) ) {
+        $controller = new $classname();
+
+        // Check and select the method to call
+        $method = strtolower($this->request->method);
+        if(method_exists($controller, $method)) {
+
+        // passing the request into the method
+        $controller->$method($this->request);
+        return;
+        }
+
+        }
+
+        }*/
+
+        //NotFoundController::print();
     }
 }
-?>

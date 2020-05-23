@@ -4,12 +4,10 @@
  * Serves as request dispatcher
  */
 
-
 define('ROOT', __DIR__);
 
 require ROOT . "/settings.php";
 require ROOT . "/app/controllers/Router.php";
-require ROOT . "/app/controllers/Request.php";
 require ROOT . "/app/controllers/Controller.php";
 require ROOT . "/app/controllers/HomeController.php";
 

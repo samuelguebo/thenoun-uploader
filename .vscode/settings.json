@@ -8,8 +8,10 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "php.validate.enable": true,
+  "php.validate.run": "onSave",
   "eslint.enable": true,
   "eslint.validate": [
     "php",
-  ]
+  ],
 }
