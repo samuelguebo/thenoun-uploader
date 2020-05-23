@@ -22,13 +22,12 @@ class Router
      * Rerouting requests
      */
     public function dispatch()
-    {   
+    {
 
         foreach ($this->routes as $route) {
             $endpoint = explode("?", $this->request)[0];
             if ($route['endpoint'] === $endpoint) {
 
-                
                 // If class exists, use it
                 if (class_exists($route['controller'])) {
                     $controller = new $route['controller']();
@@ -52,7 +51,8 @@ class Router
      * Setup the session cookie
      * @return void
      */
-    private function setupSession() {
+    private function setupSession()
+    {
         // Setup the session cookie
         session_name(APP_NAME);
         $session_params = session_get_cookie_params();

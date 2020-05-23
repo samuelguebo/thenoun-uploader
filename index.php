@@ -7,13 +7,13 @@
 define('ROOT', __DIR__);
 
 require ROOT . "/settings.php";
-require ROOT . "/app/controllers/Router.php";
 require ROOT . "/app/controllers/Controller.php";
 require ROOT . "/app/controllers/HomeController.php";
 require ROOT . "/app/controllers/AuthController.php";
 require ROOT . "/app/controllers/NotFoundController.php";
 require ROOT . "/app/utils/Logger.php";
 require ROOT . "/app/utils/MediaWiki.php";
+require ROOT . "/app/utils/Router.php";
 
 // Define routes
 $routes = array(
