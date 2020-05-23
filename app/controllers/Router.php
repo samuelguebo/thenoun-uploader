@@ -25,7 +25,8 @@ class Router
     {
 
         foreach ($this->routes as $route) {
-            if ($route['endpoint'] === $this->request) {
+            $endpoint = explode("?", $this->request)[0];
+            if ($route['endpoint'] === $endpoint) {
 
                 // If class exists, use it
                 if (class_exists($route['controller'])) {
