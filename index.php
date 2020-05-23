@@ -10,13 +10,23 @@ require ROOT . "/settings.php";
 require ROOT . "/app/controllers/Router.php";
 require ROOT . "/app/controllers/Controller.php";
 require ROOT . "/app/controllers/HomeController.php";
+require ROOT . "/app/controllers/NotFoundController.php";
 
-// Handle routing
+// Define routes
 $routes = array(
-    array('/', array('HomeController', 'index')),
-    array('/login', array('HomeController', 'login')),
+    array(
+        'endpoint' => '/',
+        'controller' => 'HomeController',
+        'method' => 'index',
+    ),
+    array(
+        'endpoint' => '/login',
+        'controller' => 'HomeController',
+        'method' => 'login',
+    ),
 );
 
+// Handle dispatching
 $request = $_SERVER['REQUEST_URI'];
 $router = new Router($routes, $request);
 $router->dispatch();

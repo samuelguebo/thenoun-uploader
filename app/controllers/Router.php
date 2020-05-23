@@ -25,47 +25,25 @@ class Router
     {
 
         foreach ($this->routes as $route) {
-            if ($route == $this->request) {
+            if ($route['endpoint'] === $this->request) {
+
                 // If class exists, use it
-                if (class_exists($classname)) {
-                    $controller = new $classname();
+                if (class_exists($route['controller'])) {
+                    $controller = new $route['controller']();
 
                     // Check and select the method to call
-                    $method = strtolower($this->request->method);
-                    if (method_exists($controller, $method)) {
-
+                    if (method_exists($controller, $route['method'])) {
+                        $method = $route['method'];
                         // passing the request into the method
                         $controller->$method($this->request);
                         return;
                     }
 
                 }
-                return true;
             }
 
         }
-        /*
-        if(isset($this->request->controller)) {
-        $;
-        $classname = $endpoint . "Controller";
 
-        // If class exists, use it
-        if ( class_exists( $classname ) ) {
-        $controller = new $classname();
-
-        // Check and select the method to call
-        $method = strtolower($this->request->method);
-        if(method_exists($controller, $method)) {
-
-        // passing the request into the method
-        $controller->$method($this->request);
-        return;
-        }
-
-        }
-
-        }*/
-
-        //NotFoundController::print();
+        NotFoundController::print();
     }
 }
