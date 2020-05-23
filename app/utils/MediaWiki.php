@@ -1,11 +1,10 @@
 <?php
 /**
- * Authentication mechanism largely inspired
- * by Brad Jorsch's OAUTH approach
+ * Oauth mechanism largely inspired by Brad Jorsch's approach
  * See <https://tools.wmflabs.org/oauth-hello-world/>
  */
 
-class Mediawiki
+class MediaWiki
 {
     private $mwOAuthUrl = OAUTH_MWURI;
     private $gUserAgent = OAUTH_UA;
@@ -14,7 +13,7 @@ class Mediawiki
     private $gConsumerSecret = OAUTH_SECRET;
     private $gTokenSecret;
     private $gTokenKey;
-    private $errorCode;
+    private $errorCode = 200;
 
     /**
      * Request authorization
@@ -22,6 +21,8 @@ class Mediawiki
      */
     public function doAuthorizationRedirect()
     {
+        $this->updateSessionToken();
+
         session_start();
         if (isset($_SESSION['tokenKey'])) {
             $this->gTokenKey = $_SESSION['tokenKey'];
@@ -78,6 +79,7 @@ class Mediawiki
         session_start();
         $_SESSION['tokenKey'] = $token->key;
         $_SESSION['tokenSecret'] = $token->secret;
+
         session_write_close();
 
         // Then we send the user off to authorize
@@ -87,7 +89,8 @@ class Mediawiki
             'oauth_token' => $token->key,
             'oauth_consumer_key' => $this->gConsumerKey,
         ));
-        header( "Location: $url" );
+
+        header("Location: $url");
         echo 'Please see <a href="' . htmlspecialchars($url) . '">' . htmlspecialchars($url) . '</a>';
     }
 
@@ -139,12 +142,6 @@ class Mediawiki
 
         $key = rawurlencode($this->gConsumerSecret) . '&' . rawurlencode($this->gTokenSecret);
 
-        var_dump(array(
-            '$toSign ' => rawurlencode(strtoupper($method)) . '&' .
-            rawurlencode("$scheme://$host$path") . '&' .
-            rawurlencode(join('&', $pairs)))
-        );
-
         return base64_encode(hash_hmac('sha1', $toSign, $key, true));
     }
 
@@ -154,6 +151,7 @@ class Mediawiki
      */
     public function doEdit()
     {
+        $this->updateSessionToken();
         $ch = null;
 
         // First fetch the username
@@ -194,28 +192,20 @@ class Mediawiki
             exit(0);
         }
         $token = $res->tokens->edittoken;
-
-        /*
-        var_dump (array(
-        'token' => $token,
-        'apiURL' => $this->apiUrl,
-        ));
-         */
-
         // Now perform the edit
-        /*
+        
         $res = $this->makeRequest( array(
         'format' => 'json',
         'action' => 'edit',
         'title' => $page,
         'section' => 'new',
-        'sectiontitle' => 'Hello, world',
+        'sectiontitle' => 'Test '. date("m.d.y @ h:i"),
         'text' => 'This message was posted using the OAuth Hello World application, and should be seen as coming from yourself. To revoke this application\'s access to your account, visit [[:m:Special:OAuthManageMyGrants]]. ~~~~',
         'summary' => 'Hello, world Hello from OAuth!',
         'watchlist' => 'nochange',
         'token' => $token,
         ), $ch );
-         */
+        
 
         echo 'API edit result: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
         echo '<hr>';
@@ -228,53 +218,135 @@ class Mediawiki
      * @param object $ch Curl handle
      * @return array API results
      */
-    function makeRequest( $post, &$ch = null ) {
-
+    private function makeRequest($post, &$ch = null)
+    {
         $headerArr = array(
             // OAuth information
             'oauth_consumer_key' => $this->gConsumerKey,
             'oauth_token' => $this->gTokenKey,
             'oauth_version' => '1.0',
-            'oauth_nonce' => md5( microtime() . mt_rand() ),
+            'oauth_nonce' => md5(microtime() . mt_rand()),
             'oauth_timestamp' => time(),
 
             // We're using secret key signatures here.
             'oauth_signature_method' => 'HMAC-SHA1',
         );
-        $signature = $this->signRequest( 'POST', $this->apiUrl, $post + $headerArr );
+        $signature = $this->signRequest('POST', $this->apiUrl, $post + $headerArr);
         $headerArr['oauth_signature'] = $signature;
 
         $header = array();
-        foreach ( $headerArr as $k => $v ) {
-            $header[] = rawurlencode( $k ) . '="' . rawurlencode( $v ) . '"';
+        foreach ($headerArr as $k => $v) {
+            $header[] = rawurlencode($k) . '="' . rawurlencode($v) . '"';
         }
-        $header = 'Authorization: OAuth ' . join( ', ', $header );
+        $header = 'Authorization: OAuth ' . join(', ', $header);
 
-        if ( !$ch ) {
+        if (!$ch) {
             $ch = curl_init();
         }
-        curl_setopt( $ch, CURLOPT_POST, true );
-        curl_setopt( $ch, CURLOPT_URL, $this->apiUrl );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $post ) );
-        curl_setopt( $ch, CURLOPT_HTTPHEADER, array( $header ) );
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_URL, $this->apiUrl);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
         //curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-        curl_setopt( $ch, CURLOPT_USERAGENT, $this->gUserAgent );
-        curl_setopt( $ch, CURLOPT_HEADER, 0 );
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-        $data = curl_exec( $ch );
-        if ( !$data ) {
-            header( "HTTP/1.1 $errorCode Internal Server Error" );
-            echo 'Curl error: ' . htmlspecialchars( curl_error( $ch ) );
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->gUserAgent);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        if (!$data) {
+            header("HTTP/1.1 $errorCode Internal Server Error");
+            echo 'Curl error: ' . htmlspecialchars(curl_error($ch));
             exit(0);
         }
-        $ret = json_decode( $data );
-        if ( $ret === null ) {
-            header( "HTTP/1.1 $errorCode Internal Server Error" );
-            echo 'Unparsable API response: <pre>' . htmlspecialchars( $data ) . '</pre>';
+        $ret = json_decode($data);
+        if ($ret === null) {
+            header("HTTP/1.1 $errorCode Internal Server Error");
+            echo 'Unparsable API response: <pre>' . htmlspecialchars($data) . '</pre>';
             exit(0);
         }
         return $ret;
     }
 
+    /**
+     * Setup the session cookie
+     * @return void
+     */
+    private function updateSessionToken()
+    {   
+
+        // Load the user token (request or access) from the session
+        $this->gTokenKey = '';
+        $this->gTokenSecret = '';
+        session_start();
+        // Logger::log(array("in updateSessionToken", $_SESSION));
+        if (isset($_SESSION['tokenKey'])) {
+            $this->gTokenKey = $_SESSION['tokenKey'];
+            $this->gTokenSecret = $_SESSION['tokenSecret'];
+        }
+        session_write_close();
+
+        // Fetch the access token if this is the callback from requesting authorization
+        if (isset($_GET['oauth_verifier']) && $_GET['oauth_verifier']) {
+            $this->fetchAccessToken();
+        }
+    }
+
+    /**
+     * Handle a callback to fetch the access token
+     * @return void
+     */
+    public function fetchAccessToken()
+    {
+        $url = $this->mwOAuthUrl . '/w/index.php?title=Special:OAuth/token';
+        $url .= strpos($url, '?') ? '&' : '?';
+
+        $url .= http_build_query(array(
+            'format' => 'json',
+            'oauth_verifier' => $_GET['oauth_verifier'],
+
+            // OAuth information
+            'oauth_consumer_key' => $this->gConsumerKey,
+            'oauth_token' => $this->gTokenKey,
+            'oauth_version' => '1.0',
+            'oauth_nonce' => md5(microtime() . mt_rand()),
+            'oauth_timestamp' => time(),
+
+            // We're using secret key signatures here.
+            'oauth_signature_method' => 'HMAC-SHA1',
+        ));
+
+        $signature = $this->signRequest('GET', $url);
+        $url .= "&oauth_signature=" . urlencode($signature);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        //curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->gUserAgent);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        if (!$data) {
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
+            echo 'Curl error: ' . htmlspecialchars(curl_error($ch));
+            exit(0);
+        }
+        curl_close($ch);
+        $token = json_decode($data);
+
+        if (is_object($token) && isset($token->error)) {
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
+            echo 'Error retrieving token: ' . htmlspecialchars($token->error) . '<br>' . htmlspecialchars($token->message);
+            exit(0);
+        }
+        if (!is_object($token) || !isset($token->key) || !isset($token->secret)) {
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
+            echo 'Invalid response from token request';
+            exit(0);
+        }
+
+        // Save the access token
+        session_start();
+        $_SESSION['tokenKey'] = $this->gTokenKey = $token->key;
+        $_SESSION['tokenSecret'] = $this->gTokenSecret = $token->secret;
+        session_write_close();
+    }
 
 }

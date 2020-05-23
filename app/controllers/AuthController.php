@@ -23,4 +23,9 @@ class AuthController extends Controller
         $mediawiki->doEdit();
     }
 
+    public static function unauthorized($request){
+        
+        require ROOT . "/app/views/index.php";
+    }
+
 }

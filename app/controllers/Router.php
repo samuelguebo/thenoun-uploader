@@ -22,11 +22,14 @@ class Router
      * Rerouting requests
      */
     public function dispatch()
-    {
+    {   
 
         foreach ($this->routes as $route) {
             $endpoint = explode("?", $this->request)[0];
             if ($route['endpoint'] === $endpoint) {
+
+                // Check authorization
+                $this->authMiddleware($route);
 
                 // If class exists, use it
                 if (class_exists($route['controller'])) {
@@ -37,14 +40,39 @@ class Router
                         $method = $route['method'];
                         // passing the request into the method
                         $controller->$method($this->request);
-                        return;
+                        exit();
                     }
-
                 }
             }
 
         }
 
         NotFoundController::print();
+    }
+
+    /**
+     * Setup the session cookie
+     * @return void
+     */
+    private function setupSession() {
+        // Setup the session cookie
+        session_name(APP_NAME);
+        $session_params = session_get_cookie_params();
+        session_set_cookie_params(
+            $session_params['lifetime'], ROOT
+        );
+    }
+
+    /**
+     * Check wether wether user is 
+     * logged in or not
+     */
+    private function authMiddleware($route) {
+
+        if(($route['protected'])){
+            AuthController::unauthorized($this->request);
+            exit();
+        }
+        
     }
 }
