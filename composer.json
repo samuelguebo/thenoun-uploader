@@ -1,11 +1,18 @@
 {
     "name": "sguebo/thenoun-project",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Samuel Guebo",
-            "email": "samuelguebo@gmail.com"
-        }
-    ],
-    "require": {}
+    "description": "",
+
+    "authors": [{
+        "name": "Samuel Guebo",
+        "email": "samuelguebo@gmail.com"
+    }],
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "require": {
+        "phpunit/phpunit": "^9.1"
+    }
 }

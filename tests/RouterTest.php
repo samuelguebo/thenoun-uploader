@@ -1,11 +1,10 @@
 <?php
-require_once dirname(__FILE__) . '/app/utils/Router.php';
+use PHPUnit\Framework\TestCase;
 
-class RouterTest extends PHPUnit_Framework_TestCase{
+class RouterTest extends TestCase{
 
     function testCanCreateRouter() {
-        //$router = new Router(null, null);
-        $router = '';
-        $this->assertEquals('', $router);
+        $router = new Router(null, null);
+        $this->assertTrue(is_object($router));
     }
 }
