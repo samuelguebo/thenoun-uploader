@@ -1,0 +1,11 @@
+{
+    "name": "sguebo/thenoun-project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Samuel Guebo",
+            "email": "samuelguebo@gmail.com"
+        }
+    ],
+    "require": {}
+}
