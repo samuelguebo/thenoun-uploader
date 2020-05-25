@@ -1,2 +1,3 @@
 RewriteEngine On
-RewriteRule ^(.+)$ app/index.php
+RewriteRule ^(.+)$ /src/index.php [L]
+
