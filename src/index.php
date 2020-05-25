@@ -6,6 +6,9 @@
 
 define('ROOT', __DIR__);
 
+$loader = require __DIR__ . '/vendor/autoload.php';
+
+/*
 require ROOT . "/settings.php";
 require ROOT . "/app/controllers/Controller.php";
 require ROOT . "/app/controllers/HomeController.php";
@@ -14,6 +17,8 @@ require ROOT . "/app/controllers/NotFoundController.php";
 require ROOT . "/app/utils/Logger.php";
 require ROOT . "/app/utils/MediaWiki.php";
 require ROOT . "/app/utils/Router.php";
+
+*/
 
 // Define routes
 $routes = array(

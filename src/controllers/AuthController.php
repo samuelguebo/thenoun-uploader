@@ -25,7 +25,7 @@ class AuthController extends Controller
 
     public static function unauthorized($request){
 
-        require ROOT . "/app/views/logged-out.php";
+        require ROOT . "/views/logged-out.php";
     }
 
 }
