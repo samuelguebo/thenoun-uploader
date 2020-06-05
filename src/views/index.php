@@ -18,10 +18,11 @@
 <body>
   <section class="container">
     <section class="layout-centered">
-      <h2>Upload Icons</h2>
-    </section>
-    <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
-      data-max-files="3" type="file">
+      <h3>Akwaba, <?php echo $user->name;?>.</h3>
+      <p class="lead">Upload icons originating from The Noun project </p>
+
+        <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
+        data-max-files="3" type="file">
   </section>
   <!-- We'll transform this input into a pond -->
 

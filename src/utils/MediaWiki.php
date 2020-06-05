@@ -24,12 +24,10 @@ class MediaWiki
     {
         $this->updateSessionToken();
 
-        session_start();
-        if (isset($_SESSION['tokenKey'])) {
-            $this->gTokenKey = $_SESSION['tokenKey'];
-            $this->gTokenSecret = $_SESSION['tokenSecret'];
+        if (null!= Router::getCookie('tokenKey')) {
+            $this->gTokenKey = Router::getCookie('tokenKey');
+            $this->gTokenSecret =Router::getCookie('tokenSecret');
         }
-        session_write_close();
 
         // First, we need to fetch a request token.
         // The request is signed with an empty token secret and no token key.
@@ -80,6 +78,7 @@ class MediaWiki
         session_start();
         $_SESSION['tokenKey'] = $token->key;
         $_SESSION['tokenSecret'] = $token->secret;
+        $_SESSION['loggedIn'] = true;
 
         session_write_close();
 
@@ -344,10 +343,51 @@ class MediaWiki
         }
 
         // Save the access token
-        session_start();
-        $_SESSION['tokenKey'] = $this->gTokenKey = $token->key;
-        $_SESSION['tokenSecret'] = $this->gTokenSecret = $token->secret;
-        session_write_close();
+        Router::setcookie('tokenKey', $this->gTokenKey = $token->key);
+        Router::setcookie('tokenSecret', $this->gTokenSecret = $token->secret);
+
     }
+
+    /**
+     * Get details about a user
+     */
+     /**
+     * Perform a generic edit
+     * @return void
+     */
+    public function getProfile()
+    {
+        $this->updateSessionToken();
+        $ch = null;
+
+        // First fetch the username
+        $res = $this->makeRequest(array(
+            'format' => 'json',
+            'action' => 'query',
+            'meta' => 'userinfo',
+        ), $ch);
+
+        if (isset($res->error->code) && $res->error->code === 'mwoauth-invalid-authorization') {
+            // We're not authorized!
+            echo 'You haven\'t authorized this application yet! Go <a href="' . htmlspecialchars($_SERVER['SCRIPT_NAME']) . '?action=authorize">here</a> to do that.';
+            echo '<hr>';
+            return;
+        }
+
+        if (!isset($res->query->userinfo)) {
+            header("HTTP/1.1 $errorCode Internal Server Error");
+            echo 'Bad API response: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
+            exit(0);
+        }
+        if (isset($res->query->userinfo->anon)) {
+            header("HTTP/1.1 $errorCode Internal Server Error");
+            echo 'Not logged in. (How did that happen?)';
+            exit(0);
+        }
+        
+        return $res;
+    
+    }
+
 
 }

@@ -9,6 +9,7 @@ class Router
 
     private $routes;
     private $request;
+    static $session;
 
     /**
      * Constructor
@@ -54,10 +55,12 @@ class Router
     public static function getCookie($key)
     {
         session_start();
-        if (isset($_SESSION[$key])) {
-            return $_SESSION[$key];
-        }
+        self::$session = $_SESSION;
         session_write_close();
+        
+        if (isset(self::$session[$key])) {
+            return self::$session[$key];
+        }
     }
 
     /**
@@ -67,8 +70,9 @@ class Router
     public static function getSession()
     {
         session_start();
-        return $_SESSION;
+        $session = $_SESSION;
         session_write_close();
+        return $session;
     }
 
     /**
@@ -78,10 +82,12 @@ class Router
     public static function setCookie($key, $value)
     {
         session_start();
+        
         if (isset($_SESSION[$key])) {
-            return $_SESSION[$key] = $value;
+            $_SESSION[$key] = $value;
         }
         session_write_close();
+        
     }
 
 }

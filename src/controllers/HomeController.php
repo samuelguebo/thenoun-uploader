@@ -13,7 +13,7 @@ class HomeController extends Controller
         
         if(AuthController::isLoggedIn()){
             $mediawiki = new MediaWiki();
-            $user = $mediawiki->getProfile();
+            $user = $mediawiki->getProfile()->query->userinfo;
             require ROOT . "/src/views/index.php";
         }else{
             require ROOT . "/src/views/logged-out.php";

@@ -18,6 +18,9 @@ class AuthController extends Controller
      */
     public function callback($request)
     {   
+        $mediawiki = new MediaWiki();
+        $user = $mediawiki->getProfile();
+
         header("Location: /");
     }
 
@@ -32,7 +35,7 @@ class AuthController extends Controller
     public function logout($request)
     {   
         Router::setCookie('loggedIn', false);
-        header('Location /');
+        header('Location: /');
     }
     /**
      * Indicate whether the current user
