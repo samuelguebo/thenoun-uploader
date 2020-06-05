@@ -9,7 +9,6 @@ class AuthController extends Controller
      */
     public function login($request)
     {   
-        
         $mediawiki = new MediaWiki();
         $mediawiki->doAuthorizationRedirect();
     }
@@ -19,13 +18,29 @@ class AuthController extends Controller
      */
     public function callback($request)
     {   
-        $mediawiki = new MediaWiki();
-        $mediawiki->doEdit();
+        header("Location: /");
     }
 
     public static function unauthorized($request){
 
         require ROOT . "/src/views/logged-out.php";
+    }
+
+    /**
+     * Logout route
+     */
+    public function logout($request)
+    {   
+        Router::setCookie('loggedIn', false);
+        header('Location /');
+    }
+    /**
+     * Indicate whether the current user
+     * is logged in
+     */
+    public static function isLoggedIn(){
+        $isLoggedIn = Router::getCookie('loggedIn');
+        return (true === $isLoggedIn);
     }
 
 }

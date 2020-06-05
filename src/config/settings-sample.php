@@ -16,3 +16,51 @@ define('OAUTH_MWURI', 'https://commons.wikimedia.org');
 define('OAUTH_CALLBACK_URL', '');
 define('OAUTH_KEY', '');
 define('OAUTH_SECRET', '');
+define('APP_NAME', 'TheNounUploader');
+define('OAUTH_UA', APP_NAME);
+
+// Define routes
+define('ROUTES', array(
+    /**
+     * Home endpoints
+     */
+    array(
+        'endpoint' => '/',
+        'controller' => 'HomeController',
+        'method' => 'index',
+        'protected' => false,
+    ),
+    array(
+        'endpoint' => '/test',
+        'controller' => 'HomeController',
+        'method' => 'test',
+        'protected' => false,
+    ),
+    array(
+        'endpoint' => '/upload',
+        'controller' => 'HomeController',
+        'method' => 'upload',
+        'protected' => true,
+    ),
+    /**
+     * Authentication endpoints
+     */
+    array(
+        'endpoint' => '/login',
+        'controller' => 'AuthController',
+        'method' => 'login',
+        'protected' => false,
+    ),
+    array(
+        'endpoint' => '/oauth-callback',
+        'controller' => 'AuthController',
+        'method' => 'callback',
+        'protected' => false,
+    ),
+    array(
+        'endpoint' => '/logout',
+        'controller' => 'AuthController',
+        'method' => 'logout',
+        'protected' => false,
+    ),
+));
