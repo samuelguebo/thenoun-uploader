@@ -9,8 +9,16 @@ class HomeController extends Controller
      * it matches GET requests
      */
     public function index($request = null)
-    {
-        require ROOT . "/src/views/logged-out.php";
+    {   
+        
+        if(AuthController::isLoggedIn()){
+            $mediawiki = new MediaWiki();
+            $user = $mediawiki->getProfile();
+            require ROOT . "/src/views/index.php";
+        }else{
+            require ROOT . "/src/views/logged-out.php";
+        }
+        
     }
 
     /**

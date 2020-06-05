@@ -16,7 +16,7 @@ class Controller{
     public function middleWare($route) {
 
         // Check wether wether user is logged in or not
-        Logger::log("Entered " . get_class($this) . " middleware");
+        //Logger::log("Entered " . get_class($this) . " middleware");
         
         if(($route['protected'])){
             AuthController::unauthorized($request);

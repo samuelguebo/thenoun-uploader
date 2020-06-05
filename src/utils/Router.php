@@ -13,10 +13,10 @@ class Router
     /**
      * Constructor
      */
-    public function __construct($routes, $request)
+    public function __construct($routes)
     {
         $this->routes = $routes;
-        $this->request = $request;
+        $this->request = $_SERVER['REQUEST_URI'];
     }
     /**
      * Rerouting requests
@@ -51,14 +51,37 @@ class Router
      * Setup the session cookie
      * @return void
      */
-    private function setupSession()
+    public static function getCookie($key)
     {
-        // Setup the session cookie
-        session_name(APP_NAME);
-        $session_params = session_get_cookie_params();
-        session_set_cookie_params(
-            $session_params['lifetime'], ROOT
-        );
+        session_start();
+        if (isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+        session_write_close();
+    }
+
+    /**
+     * Setup the session cookie
+     * @return void
+     */
+    public static function getSession()
+    {
+        session_start();
+        return $_SESSION;
+        session_write_close();
+    }
+
+    /**
+     * Setup the session cookie
+     * @return void
+     */
+    public static function setCookie($key, $value)
+    {
+        session_start();
+        if (isset($_SESSION[$key])) {
+            return $_SESSION[$key] = $value;
+        }
+        session_write_close();
     }
 
 }
