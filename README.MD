@@ -7,5 +7,8 @@ Rename `settings-sample.php` to `settings.php` and change its parameters accordi
 ## Launch the application
 run the following command in the repository: `php -S localhost:5000`
 
+## Unit testing
+Run the following command `./vendor/bin/phpunit tests`
+
 ## Contributors 
  * Samuel Guebo ([@samuelguebo](https://twitter/com/samuelguebo))
