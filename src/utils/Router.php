@@ -32,7 +32,7 @@ class Router
                 // If class exists, use it
                 if (class_exists($route['controller'])) {
                     $controller = new $route['controller']();
-                    $controller->middleWare($route);
+                    $controller->middleWare($route, $this->request);
                     // Check and select the method to call
                     if (method_exists($controller, $route['method'])) {
                         $method = $route['method'];
