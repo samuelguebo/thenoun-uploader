@@ -13,14 +13,16 @@ class Controller{
      * Generic middleware shared accross
      * all child classes
      */
-    public function middleWare($route) {
+    public function middleWare($route, $request) {
 
         // Check wether wether user is logged in or not
         //Logger::log("Entered " . get_class($this) . " middleware");
         
         if(($route['protected'])){
-            AuthController::unauthorized($request);
-            exit();
+            if(!AuthController::isLoggedIn()){
+                AuthController::unauthorized($request);
+                exit();
+            }
         }
     }
 
