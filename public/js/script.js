@@ -7,7 +7,7 @@ const pond = FilePond.create(
     document.querySelector('input.filepond'), {
         acceptedFileTypes: ['image/svg'],
         maxFileSize: '500KB',
-
+        labelFileProcessingComplete: 'File ready'
     }
 );
 // override Pond upload
@@ -18,7 +18,7 @@ pond.setOptions({
         process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
             //  update the progress to 100% 
             load(200); // ideally, do some logic
-        }
+        },
     }
 });
 
