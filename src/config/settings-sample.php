@@ -16,7 +16,8 @@ define('OAUTH_MWURI', 'https://commons.wikimedia.org');
 define('OAUTH_CALLBACK_URL', '');
 define('OAUTH_KEY', '');
 define('OAUTH_SECRET', '');
-define('APP_NAME', 'TheNounUploader');
+define('APP_NAME', 'The Noun Uploader');
+define('APP_DESCRIPTION', 'Icon uploader for Wikimedia Commons');
 define('OAUTH_UA', APP_NAME);
 
 // Define routes

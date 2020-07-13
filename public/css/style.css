@@ -5,6 +5,10 @@
 	padding-top: 20px;
 }
 
+.jumbotron h1 {
+	font-size: 3em;
+}
+
 #upload-button {
 	display: none;
 }

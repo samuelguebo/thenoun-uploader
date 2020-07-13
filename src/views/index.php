@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wishlist | Frontend</title>
+  <title><?php echo APP_NAME; ?> | <?php echo APP_DESCRIPTION; ?></title>
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
@@ -20,11 +20,12 @@
 <body>
   <section class="container">
     <section class="layout-centered">
+      
       <h3>Akwaba, <?php echo $user->name;?>. <a href="./logout" class="btn btn-success">Logout</a></h3>
       <p class="lead">Upload icons originating from The Noun project </p>
 
         <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
-        data-max-files="3" type="file">
+        data-max-files="10" type="file">
         <button class="btn btn-warning" id="upload-button"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
     </section>
   </section>
