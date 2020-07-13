@@ -10,6 +10,17 @@ const pond = FilePond.create(
 
     }
 );
+// override Pond upload
+pond.setOptions({
+    server: {
+        url: uploadURI,
+        // disable asynchronous upload, just return the file
+        process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+            //  update the progress to 100% 
+            load(200); // ideally, do some logic
+        }
+    }
+});
 
 /**
  * Improve UX by hiding or dislaying
@@ -41,32 +52,22 @@ const displayUploadButton = () => {
  * processing (i.e: send to wiki, etc.)
  */
 const uploadToServer = () => {
-    // override Pond upload
-    pond.setOptions({
-        server: {
-            url: uploadURI,
-            // disable asynchronous upload, just return the file
-            process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+    pond.processFiles().then(files => {
+        // done processing files
+        let formData = new FormData();
+        formData.append('name', 'icons')
+        formData.append('files', files)
 
-                // done processing files
-                let formData = new FormData();
-                formData.append(fieldName, file, file.name)
-
-                // post data
-                fetch(uploadURI, {
-                        body: formData,
-                        method: 'POST'
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("upload response", data)
-                        load(200);
-                    }).catch(error => load(300))
-
-            }
-        }
-    });
+        // post data
+        fetch(uploadURI, {
+                body: formData,
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => console.log("upload response", data))
+    })
 }
+
 
 /**
  * Centralize event listeners for code readability.

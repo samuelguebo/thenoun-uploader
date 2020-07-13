@@ -26,7 +26,7 @@
 
         <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
         data-max-files="10" type="file">
-        <button class="btn btn-warning" id="upload-button"><i class="fa fa-upload" aria-hidden="true"></i> Upload</button>
+        <button class="btn btn-warning" id="upload-button"><i class="fa fa-paper-plane" aria-hidden="true"></i> Finish upload</button>
     </section>
   </section>
   <!-- We'll transform this input into a pond -->
