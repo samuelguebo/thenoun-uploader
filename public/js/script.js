@@ -2,6 +2,7 @@
  * Create a file uploader
  * @link https://pqina.nl/filepond/docs/patterns/api/server/
  */
+
 const uploadURI = './upload' // backend endpoint
 const pond = FilePond.create(
     document.querySelector('input.filepond'), {
@@ -52,22 +53,25 @@ const displayUploadButton = () => {
  * processing (i.e: send to wiki, etc.)
  */
 const uploadToServer = () => {
-    pond.processFiles().then(files => {
-        // done processing files
-        let formData = new FormData();
-        formData.append('name', 'icons')
-        formData.append('files', files)
+    //pond.processFiles().then(files => {
+    let files = pond.getFiles()
+    // done processing files
+    let formData = new FormData();
 
-        // post data
-        fetch(uploadURI, {
-                body: formData,
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => console.log("upload response", data))
-    })
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        formData.append(file.file.name, file.file)
+
+    }
+    // post data
+    fetch(uploadURI, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+    //})
 }
-
 
 /**
  * Centralize event listeners for code readability.
