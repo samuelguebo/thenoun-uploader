@@ -19,9 +19,9 @@
 
 <body>
   <section class="container">
-    <section class="layout-centered">
+    <section class="jumbotron">
       
-      <h3>Akwaba, <?php echo $user->name;?>. <a href="./logout" class="btn btn-success">Logout</a></h3>
+      <h1>Akwaba, <?php echo $user->name;?>. <a href="./logout" class="btn btn-success btn-logout"><i class="fa fa-sign-out"></i> Logout</a></h1>
       <p class="lead">Upload icons originating from The Noun project </p>
 
         <!-- We'll transform this input into a pond -->
@@ -32,15 +32,9 @@
       </section>
       
     </section>
+    
+    <!-- Load FilePond library -->
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <!-- Turn all file input elements into ponds -->
+    <script src="public/js/script.js"></script>
     <?php require_once 'footer.php'; ?>
-
-  <!-- Load FilePond library -->
-  <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-
-  <!-- Turn all file input elements into ponds -->
-  <script src="public/js/script.js"></script>
-
-
-</body>
-
-</html>

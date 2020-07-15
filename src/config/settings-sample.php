@@ -18,6 +18,7 @@ define('OAUTH_KEY', '');
 define('OAUTH_SECRET', '');
 define('APP_NAME', 'The Noun Uploader');
 define('APP_DESCRIPTION', 'Icon uploader for Wikimedia Commons');
+define('APP_SLOGAN', 'Upload icons the Wikimedia Commons and improve this repository with millions of free-use images!');
 define('OAUTH_UA', APP_NAME);
 
 // Define routes
