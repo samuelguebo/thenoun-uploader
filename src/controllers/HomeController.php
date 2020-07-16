@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Controllers;
 /**
  * Controller handling homepage
  */

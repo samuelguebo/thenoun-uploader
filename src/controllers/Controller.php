@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Controllers;
 /**
  * Abstract class for Controllers
  * it can be extended to create

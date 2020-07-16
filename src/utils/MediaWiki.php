@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Utils;
 /**
  * Oauth mechanism largely inspired by Brad Jorsch's approach
  * See <https://tools.wmflabs.org/oauth-hello-world/>

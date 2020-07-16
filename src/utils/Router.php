@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Utils;
 /**
  * Router responsible for redirecting
  * incoming request and mapping them

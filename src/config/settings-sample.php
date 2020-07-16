@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Config;
 /**
  * Rename this file to `settings.php`
  * and make sure it's not accessible

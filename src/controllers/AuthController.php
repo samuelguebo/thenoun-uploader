@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Controllers;
 /**
  * Authentication mechanism
  */

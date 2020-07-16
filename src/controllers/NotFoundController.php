@@ -1,4 +1,4 @@
-<?php
+<?php namespace Thenoun\Controllers;
 /**
  * REST Controller for Job entities
  * and their relevant endpoints
