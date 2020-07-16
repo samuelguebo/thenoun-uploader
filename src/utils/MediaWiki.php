@@ -1,4 +1,6 @@
 <?php namespace Thenoun\Utils;
+
+use Thenoun\Utils\Router;
 /**
  * Oauth mechanism largely inspired by Brad Jorsch's approach
  * See <https://tools.wmflabs.org/oauth-hello-world/>

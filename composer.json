@@ -8,11 +8,14 @@
         "email": "samuelguebo@gmail.com"
     }],
     "autoload": {
-        "classmap": [
-            "src/"
-        ]
+        "psr-4": {
+            "Thenoun\\": "src/"
+        }
     },
     "require": {
         "phpunit/phpunit": "^9.1"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit tests --colors=always"
     }
 }

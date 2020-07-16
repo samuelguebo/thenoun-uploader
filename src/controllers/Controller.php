@@ -1,4 +1,6 @@
 <?php namespace Thenoun\Controllers;
+
+use Thenoun\Controllers\AuthController;
 /**
  * Abstract class for Controllers
  * it can be extended to create

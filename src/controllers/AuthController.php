@@ -1,4 +1,6 @@
 <?php namespace Thenoun\Controllers;
+
+use Thenoun\Utils\MediaWiki;
 /**
  * Authentication mechanism
  */

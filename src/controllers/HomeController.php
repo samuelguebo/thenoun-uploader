@@ -1,4 +1,7 @@
 <?php namespace Thenoun\Controllers;
+
+use Thenoun\Utils\MediaWiki;
+use Thenoun\Controllers\AuthController;
 /**
  * Controller handling homepage
  */
