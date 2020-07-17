@@ -1,4 +1,5 @@
 <?php namespace Thenoun\Utils;
+
 /**
  * Router responsible for redirecting
  * incoming request and mapping them
@@ -28,10 +29,11 @@ class Router
         foreach ($this->routes as $route) {
             $endpoint = explode("?", $this->request)[0];
             if ($route['endpoint'] === $endpoint) {
-
                 // If class exists, use it
-                if (class_exists($route['controller'])) {
-                    $controller = new $route['controller']();
+                $class = "Thenoun\Controllers\\" .$route['controller'];
+                
+                if (class_exists($class)) {
+                    $controller = (new $class());
                     $controller->middleWare($route, $this->request);
                     // Check and select the method to call
                     if (method_exists($controller, $route['method'])) {
@@ -45,7 +47,7 @@ class Router
 
         }
 
-        NotFoundController::print();
+        Thenoun\Controllers\NotFoundController::print();
     }
 
     /**
