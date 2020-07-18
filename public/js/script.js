@@ -74,11 +74,72 @@ const uploadToServer = () => {
 }
 
 /**
+ * Manage the appearing and dispearing of 
+ * each part of the multistep form
+ */
+
+const displayMultistepForm = () => {
+    let blocks = document.querySelectorAll(".steps-blocks .step")
+    let blockIndicators = document.querySelectorAll(".steps-pagination a")
+    let position = 0 // 0 is block 1
+    let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
+    blockIndicators = Array.from(blockIndicators)
+
+    blockButtonControllers.forEach(controller => {
+        controller.addEventListener('click', (e) => {
+
+            // check whether button is "Next" or "Prev"
+            let type = (controller.id === "prev-button") ? "prev" : "next"
+
+            if (type === "next") {
+                position += 1
+            } else {
+                position -= 1
+            }
+
+            // set position min and max
+            if (position >= blocks.length - 1) {
+                position = blocks.length - 1
+                // hide button-prev
+                document.getElementById("next-button").style.display = "none"
+            }
+
+            if (position <= 0) {
+                position = 0
+                // hide button-next
+                document.getElementById("prev-button").style.display = "none"
+            }
+
+            // show buttons accordingly
+            if (position == 1) {
+                document.getElementById("prev-button").style.display = "inline-block"
+                document.getElementById("next-button").style.display = "inline-block"
+            }
+
+            // remove "active" from indicators
+            blockIndicators.forEach(e => {
+                e.classList.remove("active")
+            })
+
+            // do the same for blocks
+            blocks.forEach(e => {
+                e.classList.remove("active")
+            })
+
+            // activate the current controller and block 
+            blockIndicators[position].classList.add("active")
+            blocks[position].classList.add("active")
+        })
+    })
+
+}
+/**
  * Centralize event listeners for code readability.
  * Consider a better approach to code organization
  */
 const initListeners = () => {
     displayUploadButton()
+    displayMultistepForm()
 }
 
 initListeners() // trigger event listeners
