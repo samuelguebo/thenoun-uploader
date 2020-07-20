@@ -133,6 +133,43 @@ const displayMultistepForm = () => {
     })
 
 }
+
+/**
+ * Generate forms with details for each
+ * icons that was uploaded
+ */
+const handleIconDescriptions = () => {
+    let nextButton = document.getElementById('next-button')
+    let detailsWrapper = document.querySelector('.steps-blocks .details')
+
+    let htmlTemplate = `
+    <div class="card">
+        <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <form>
+        <div class="form-group">
+            <label for="title">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+        </div>
+        </form>
+        </div>
+    </div>`
+
+    // update DOM automatically
+    nextButton.addEventListener('click', e => {
+        let icons = pond.getFiles()
+        console.log(`nextButton was clicked, icons length: ${icons.length}`)
+        icons.forEach(icon => {
+            let detailsForm = document.createElement('div')
+            detailsForm.innerHTML = htmlTemplate
+            detailsWrapper.appendChild(detailsForm)
+        })
+    })
+}
 /**
  * Centralize event listeners for code readability.
  * Consider a better approach to code organization
@@ -140,6 +177,7 @@ const displayMultistepForm = () => {
 const initListeners = () => {
     displayUploadButton()
     displayMultistepForm()
+    handleIconDescriptions()
 }
 
 initListeners() // trigger event listeners
