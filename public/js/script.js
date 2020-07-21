@@ -11,6 +11,9 @@ const pond = FilePond.create(
         labelFileProcessingComplete: 'File ready'
     }
 );
+const getSupportedFormats = () => {
+    return ['image/svg']
+}
 // override Pond upload
 pond.setOptions({
     server: {
@@ -141,6 +144,7 @@ const displayMultistepForm = () => {
 const handleIconDescriptions = () => {
     let nextButton = document.getElementById('next-button')
     let detailsWrapper = document.querySelector('.steps-blocks .details')
+    let detailsIds = []
 
     // update DOM automatically
     nextButton.addEventListener('click', e => {
@@ -156,7 +160,12 @@ const handleIconDescriptions = () => {
                 let detailsForm = document.createElement('div')
                 detailsForm.classList.add("card")
                 detailsForm.innerHTML = formDetailTemplate(icon)
-                detailsWrapper.appendChild(detailsForm)
+
+                // add form details but avoid duplication
+                if (detailsIds.indexOf(icon.getId()) < 0) {
+                    detailsWrapper.appendChild(detailsForm)
+                    detailsIds.push(icon.getId())
+                }
             }
 
             reader.readAsText(file)
@@ -183,7 +192,7 @@ const formDetailTemplate = (icon) => {
 }
 /**
  * Centralize event listeners for code readability.
- * Consider a better approach to code organization
+ * TODO: consider a better code organization
  */
 const initListeners = () => {
     displayUploadButton()
