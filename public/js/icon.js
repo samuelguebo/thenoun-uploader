@@ -42,7 +42,7 @@ class Icon {
         let fileReg = new RegExp(/(noun_|_\d{3,}.[0-9a-z]+)/g)
         let title = this.file.name.replace(fileReg, '')
         title = title.charAt(0).toUpperCase() + title.slice(1)
-        return `File:${title} (${this.getId()}) - The Noun Project`
+        return `File:${title} (${this.getId()}) - The Noun Project${this.getExtension()}`
     }
 
     getWikiCode = () => {
@@ -57,7 +57,7 @@ class Icon {
         `
         let wikiCode = `=={{int:filedesc}}==\n`
         wikiCode += `{{Information\n`
-        wikiCode += `|description={{en|1=${iconTitle} (${iconId}) - The Noun Project.svg}}\n`
+        wikiCode += `|description={{en|1=${iconTitle}}}\n`
         wikiCode += `|date= ${fullYear}-${month}-${day}\n`
         wikiCode += `|source=Noun Project - ${authorLink}\n`
         wikiCode += `|author= [${authorLink} ${authorName}]\n`
