@@ -5,6 +5,10 @@ class Icon {
         this.content = file.target.result
     }
 
+    getFileName() {
+        return this.file.name;
+    }
+
     getId() {
         const idReg = new RegExp(/\d{5,}/)
         let matches = this.file.name.match(idReg)
@@ -34,10 +38,11 @@ class Icon {
     }
 
     getTitle = () => {
-        let fileReg = new RegExp(/(noun_|_\d{3,})/g)
+        //let fileReg = new RegExp(/(noun_|_\d{3,})/g)
+        let fileReg = new RegExp(/(noun_|_\d{3,}.[0-9a-z]+)/g)
         let title = this.file.name.replace(fileReg, '')
         title = title.charAt(0).toUpperCase() + title.slice(1)
-        return title
+        return `File:${title} (${this.getId()}) - The Noun Project`
     }
 
     getWikiCode = () => {
@@ -67,7 +72,9 @@ class Icon {
         return wikiCode
     }
 
+    getExtension = () => {
+        return this.file.name.match(/\.[0-9a-z]+$/i)[0]
+    }
+
 
 }
-
-export default Icon;

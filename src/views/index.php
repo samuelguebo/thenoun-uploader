@@ -58,5 +58,6 @@
     <!-- Load FilePond library -->
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <!-- Turn all file input elements into ponds -->
+    <script src="public/js/icon.js"></script>
     <script src="public/js/script.js"></script>
 <?php require_once 'footer.php';?>

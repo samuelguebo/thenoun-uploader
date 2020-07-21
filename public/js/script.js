@@ -142,33 +142,44 @@ const handleIconDescriptions = () => {
     let nextButton = document.getElementById('next-button')
     let detailsWrapper = document.querySelector('.steps-blocks .details')
 
-    let htmlTemplate = `
-    <div class="card">
-        <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <form>
-        <div class="form-group">
-            <label for="title">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-        </div>
-        </form>
-        </div>
-    </div>`
-
     // update DOM automatically
     nextButton.addEventListener('click', e => {
-        let icons = pond.getFiles()
-        console.log(`nextButton was clicked, icons length: ${icons.length}`)
-        icons.forEach(icon => {
-            let detailsForm = document.createElement('div')
-            detailsForm.innerHTML = htmlTemplate
-            detailsWrapper.appendChild(detailsForm)
+        let files = pond.getFiles()
+
+        files.forEach(file => {
+            file = file.file // restructure object
+            // file content can only be read asynchronously
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                f["name"] = file.name
+                let icon = new Icon(f)
+                let detailsForm = document.createElement('div')
+                detailsForm.classList.add("card")
+                detailsForm.innerHTML = formDetailTemplate(icon)
+                detailsWrapper.appendChild(detailsForm)
+            }
+
+            reader.readAsText(file)
         })
     })
+}
+
+const formDetailTemplate = (icon) => {
+    return `
+    <div class="card-body">
+        <h5 class="card-title">${icon.getFileName()}</h5>
+        <form>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" placeholder="Enter title" name="title" value="${icon.getTitle()}">
+        </div>
+        <form>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" class="form-control" placeholder="Specify the author" name="author" value="${icon.getAuthor()}">
+        </div>
+        </form>
+    </div>`
 }
 /**
  * Centralize event listeners for code readability.

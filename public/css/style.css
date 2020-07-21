@@ -34,6 +34,10 @@ body {
 	margin-right: 5px;
 }
 
+.steps-blocks .details .card {
+	margin-bottom: 20px;
+}
+
 #upload-button {
 	display: none;
 }
