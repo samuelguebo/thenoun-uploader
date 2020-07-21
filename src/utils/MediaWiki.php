@@ -59,19 +59,19 @@ class MediaWiki
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $data = curl_exec($ch);
         if (!$data) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Curl error: ' . htmlspecialchars(curl_error($ch));
             exit(0);
         }
         curl_close($ch);
         $token = json_decode($data);
         if (is_object($token) && isset($token->error)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Error retrieving token: ' . htmlspecialchars($token->error) . '<br>' . htmlspecialchars($token->message);
             exit(0);
         }
         if (!is_object($token) || !isset($token->key) || !isset($token->secret)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Invalid response from token request';
             exit(0);
         }
@@ -171,12 +171,12 @@ class MediaWiki
         }
 
         if (!isset($res->query->userinfo)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Bad API response: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
             exit(0);
         }
         if (isset($res->query->userinfo->anon)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Not logged in. (How did that happen?)';
             exit(0);
         }
@@ -189,7 +189,7 @@ class MediaWiki
             'type' => 'edit',
         ), $ch);
         if (!isset($res->tokens->edittoken)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Bad API response: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
             exit(0);
         }
@@ -255,13 +255,13 @@ class MediaWiki
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $data = curl_exec($ch);
         if (!$data) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Curl error: ' . htmlspecialchars(curl_error($ch));
             exit(0);
         }
         $ret = json_decode($data);
         if ($ret === null) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Unparsable API response: <pre>' . htmlspecialchars($data) . '</pre>';
             exit(0);
         }
@@ -377,12 +377,12 @@ class MediaWiki
         }
 
         if (!isset($res->query->userinfo)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Bad API response: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
             exit(0);
         }
         if (isset($res->query->userinfo->anon)) {
-            header("HTTP/1.1 $errorCode Internal Server Error");
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
             echo 'Not logged in. (How did that happen?)';
             exit(0);
         }

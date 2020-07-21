@@ -23,9 +23,9 @@
       <h1>Akwaba, <?php echo $user->name; ?>. <a href="./logout" class="btn btn-success btn-logout"><i class="fa fa-sign-out"></i> Logout</a></h1>
       <p class="lead"><?php echo APP_DESCRIPTION; ?></p>
         <div class="steps-pagination">
-          <a href="#" class="active">Upload icons</a>
-          <a href="#">Describe files</a>
-          <a href="#">Finalize</a>
+          <a href="#" class="active">1. Upload icons</a>
+          <a href="#">2. Describe files</a>
+          <a href="#">3. Finalize</a>
         </div>
         <div class="steps-blocks">
           <div class="uploader-container step active">
