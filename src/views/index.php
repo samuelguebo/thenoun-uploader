@@ -40,7 +40,6 @@
               <div class="card-body">
                 <h5 class="card-title">Card title</h5>   
                 <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore omnis dolorem assumenda quasi dicta distinctio exercitationem quod id a asperiores sequi voluptate saepe illum beatae dolor soluta est, reiciendis laboriosam?</p>
-                <button class="btn btn-warning" id="upload-button"><i class="fa fa-paper-plane" aria-hidden="true"></i> Finish upload</button>
               </div>
             </div> 
           </div>
