@@ -27,30 +27,6 @@ pond.setOptions({
 });
 
 /**
- * Improve UX by hiding or dislaying
- * the upload button
- */
-const displayUploadButton = () => {
-    let uploadButton = document.getElementById("upload-button")
-    // deal with each file
-    pond.on('addfile', (error, file) => {
-        uploadButton.style.display = 'block';
-    });
-
-    pond.on('removefile', (error, file) => {
-        let files = pond.getFiles()
-        // Hide upload button
-        if (files.length < 1)
-            uploadButton.style.display = 'none';
-    });
-
-    uploadButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        uploadToServer(); // push to backend
-    })
-}
-
-/**
  * Override Pond upload with a custom the logic
  * for sending icons to server for further 
  * processing (i.e: send to wiki, etc.)
@@ -84,9 +60,26 @@ const uploadToServer = () => {
 const displayMultistepForm = () => {
     let blocks = document.querySelectorAll(".steps-blocks .step")
     let blockIndicators = document.querySelectorAll(".steps-pagination a")
-    let position = 0 // 0 is block 1
     let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
+    let confirmButton = document.getElementById("next-button")
+    let returnButton = document.getElementById("prev-button")
     blockIndicators = Array.from(blockIndicators)
+    let position = 0 // 0 is block 1
+    let confirmCounter = 0;
+    let confirmed = false;
+
+    // show nextButton when a file is added
+    pond.on('addfile', (error, file) => {
+        confirmButton.style.display = 'block';
+    });
+
+    // hide nextButton when there are no files
+    pond.on('removefile', (error, file) => {
+        let files = pond.getFiles()
+        // Hide upload button
+        if (files.length < 1)
+            confirmButton.style.display = 'none';
+    });
 
     blockButtonControllers.forEach(controller => {
         controller.addEventListener('click', (e) => {
@@ -99,24 +92,28 @@ const displayMultistepForm = () => {
             } else {
                 position -= 1
             }
+            confirmCounter = position
 
             // set position min and max
             if (position >= blocks.length - 1) {
                 position = blocks.length - 1
+
                 // hide button-prev
-                document.getElementById("next-button").style.display = "none"
+                confirmButton.innerHTML = 'Confirm <i class="fa fa fa-check"></i> '
+            } else {
+                confirmButton.innerHTML = 'Next <i class="fa fa fa-angle-right"></i>'
             }
 
             if (position <= 0) {
                 position = 0
                 // hide button-next
-                document.getElementById("prev-button").style.display = "none"
+                returnButton.style.display = "none"
             }
 
             // show buttons accordingly
             if (position == 1) {
-                document.getElementById("prev-button").style.display = "inline-block"
-                document.getElementById("next-button").style.display = "inline-block"
+                returnButton.style.display = "inline-block"
+                confirmButton.style.display = "inline-block"
             }
 
             // remove "active" from indicators
@@ -132,6 +129,13 @@ const displayMultistepForm = () => {
             // activate the current controller and block 
             blockIndicators[position].classList.add("active")
             blocks[position].classList.add("active")
+
+            if (type === "next" && confirmCounter == blocks.length && !confirmed) {
+                console.log("confirmCounter", confirmCounter)
+                confirmed = true; // reset
+                uploadToServer(); // push to backend
+            }
+
         })
     })
 
@@ -173,6 +177,13 @@ const handleIconDescriptions = () => {
     })
 }
 
+/**
+ * Boilerplate that uses details from an Icon object
+ * and generate HTML code
+ * 
+ * @param {Icon object} icon 
+ * @returns String HTML code
+ */
 const formDetailTemplate = (icon) => {
     return `
     <div class="card-body">
@@ -195,7 +206,6 @@ const formDetailTemplate = (icon) => {
  * TODO: consider a better code organization
  */
 const initListeners = () => {
-    displayUploadButton()
     displayMultistepForm()
     handleIconDescriptions()
 }
