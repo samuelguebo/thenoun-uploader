@@ -23,8 +23,8 @@
       <h1>Akwaba, <?php echo $user->name; ?>. <a href="./logout" class="btn btn-success btn-logout"><i class="fa fa-sign-out"></i> Logout</a></h1>
       <p class="lead"><?php echo APP_DESCRIPTION; ?></p>
         <div class="steps-pagination">
-          <a href="#" class="active">1. Upload icons</a>
-          <a href="#">2. Describe files</a>
+          <a href="#" class="active">1. Import</a>
+          <a href="#">2. Describe</a>
           <a href="#">3. Finalize</a>
         </div>
         <div class="steps-blocks">
@@ -35,11 +35,12 @@
           </div>
           <!-- filled automagically through JS -->
           <div class="details step"></div>
-          <div class="finalize step">
+          <div class="confirm step">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Card title</h5>   
-                <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolore omnis dolorem assumenda quasi dicta distinctio exercitationem quod id a asperiores sequi voluptate saepe illum beatae dolor soluta est, reiciendis laboriosam?</p>
+                <h5 class="card-title">Last verifications</h5>   
+                <p class="card-text">Please double check the details below and press the confirmation button once you are ready to complete the upload process.</p>
+                <ol class="files"></ol>
               </div>
             </div> 
           </div>

@@ -4,6 +4,7 @@
  */
 
 const uploadURI = './upload' // backend endpoint
+const getSupportedFormats = () => ['image/svg']
 const pond = FilePond.create(
     document.querySelector('input.filepond'), {
         acceptedFileTypes: ['image/svg'],
@@ -11,9 +12,17 @@ const pond = FilePond.create(
         labelFileProcessingComplete: 'File ready'
     }
 );
-const getSupportedFormats = () => {
-    return ['image/svg']
-}
+
+// global variables
+let blocks = document.querySelectorAll(".steps-blocks .step")
+let blockIndicators = Array.from(document.querySelectorAll(".steps-pagination a"))
+let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
+let confirmButton = document.getElementById("next-button")
+let returnButton = document.getElementById("prev-button")
+let position = 0 // 0 is block 1
+let confirmCounter = 0;
+let confirmed = false;
+
 // override Pond upload
 pond.setOptions({
     server: {
@@ -58,16 +67,6 @@ const uploadToServer = () => {
  */
 
 const displayMultistepForm = () => {
-    let blocks = document.querySelectorAll(".steps-blocks .step")
-    let blockIndicators = document.querySelectorAll(".steps-pagination a")
-    let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
-    let confirmButton = document.getElementById("next-button")
-    let returnButton = document.getElementById("prev-button")
-    blockIndicators = Array.from(blockIndicators)
-    let position = 0 // 0 is block 1
-    let confirmCounter = 0;
-    let confirmed = false;
-
     // show nextButton when a file is added
     pond.on('addfile', (error, file) => {
         confirmButton.style.display = 'block';
@@ -131,7 +130,6 @@ const displayMultistepForm = () => {
             blocks[position].classList.add("active")
 
             if (type === "next" && confirmCounter == blocks.length && !confirmed) {
-                console.log("confirmCounter", confirmCounter)
                 confirmed = true; // reset
                 uploadToServer(); // push to backend
             }
@@ -148,11 +146,13 @@ const displayMultistepForm = () => {
 const handleIconDescriptions = () => {
     let nextButton = document.getElementById('next-button')
     let detailsWrapper = document.querySelector('.steps-blocks .details')
+    let confirmWrapper = document.querySelector('.steps-blocks .confirm')
     let detailsIds = []
 
     // update DOM automatically
     nextButton.addEventListener('click', e => {
         let files = pond.getFiles()
+        let icons = []
 
         files.forEach(file => {
             file = file.file // restructure object
@@ -169,11 +169,20 @@ const handleIconDescriptions = () => {
                 if (detailsIds.indexOf(icon.getId()) < 0) {
                     detailsWrapper.appendChild(detailsForm)
                     detailsIds.push(icon.getId())
+                    icons.push(icon)
+
+                    // summarize the file list for confirmation                        
+                    let liNode = document.createElement("li")
+                    liNode.innerHTML = `${icon.getTitle()}, by ${icon.getAuthor()}`
+                    confirmWrapper.querySelector("ol").appendChild(liNode)
                 }
+
             }
 
             reader.readAsText(file)
         })
+
+
     })
 }
 
