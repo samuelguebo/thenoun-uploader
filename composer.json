@@ -16,7 +16,7 @@
         "phpunit/phpunit": "^9.1"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests --colors=always --configuration=./phpunit.xml",
+        "test": "./vendor/bin/phpunit tests --colors=always --bootstrap=vendor/autoload.php",
         "run-dev": "php -S localhost:5000"
     }
 }
