@@ -46,26 +46,25 @@ pond.setOptions({
  * processing (i.e: send to wiki, etc.)
  */
 const uploadToServer = () => {
-    // done processing files
-    let formData = new FormData();
-
-
+    // Upload each file a parralel process (asynchronously)
     for (let i = 0; i < icons.length; i++) {
+
         const icon = icons[i];
+        let formData = new FormData();
         formData.append(icon.getFileName(), icon.getFile())
-        formData.append(icon.getFileName(), icon.getAuthor())
-        formData.append(icon.getFileName(), icon.getWikiCode())
+        formData.append("icon", JSON.stringify({
+            "title": icon.getTitle(),
+            "author": icon.getAuthor(),
+            "wikicode": icon.getWikiCode()
+        }))
 
+        fetch(uploadURI, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
     }
-
-    // post data
-    fetch(uploadURI, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-    //})
 }
 
 /**
