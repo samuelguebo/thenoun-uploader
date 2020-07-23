@@ -30,20 +30,37 @@
         <div class="steps-blocks">
           <div class="uploader-container step active">
             <!-- We'll transform this input into a pond -->
-            <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="1MB"
+            <input class="filepond" name="filepond" multiple data-allow-reorder="true" data-max-file-size="500KB"
             data-max-files="10" type="file">
           </div>
           <!-- filled automagically through JS -->
           <div class="details step"></div>
+
+          <!-- confirmation step -->
           <div class="confirm step">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Last verifications</h5>   
                 <p class="card-text">Please double check the details below and press the confirmation button once you are ready to complete the upload process.</p>
                 <ul class="files"></ul>
+                <div class="alert alert-danger" role="alert">This is a danger alert—check it out!</div>
               </div>
             </div> 
           </div>
+
+          <!-- Let user know result from server -->
+          <div class="notify step">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Notification</h5>   
+                <ul class="files"></ul>
+              </div>
+            </div> 
+            <br>
+            <a href="./" class="btn btn-success">Restart <i class="fa fa-refresh"></i> </a>
+          </div>
+        </div>
+
         </div>
         <div class="steps-buttons">
           <button class="btn btn-primary" id="prev-button"><i class="fa fa fa-angle-left"></i> Back</button>

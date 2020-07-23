@@ -8,7 +8,6 @@ const getSupportedFormats = () => ['image/svg']
 const pond = FilePond.create(
     document.querySelector('input.filepond'), {
         acceptedFileTypes: ['image/svg'],
-        maxFileSize: '500KB',
         labelFileProcessingComplete: 'File ready'
     }
 );
@@ -18,13 +17,13 @@ let blocks = document.querySelectorAll(".steps-blocks .step")
 let blockIndicators = Array.from(document.querySelectorAll(".steps-pagination a"))
 let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
 let nextButton = document.getElementById('next-button')
+let notifyWrapper = document.querySelector('.steps-blocks .notify')
 let detailsWrapper = document.querySelector('.steps-blocks .details')
 let confirmWrapper = document.querySelector('.steps-blocks .confirm')
 let confirmButton = document.getElementById("next-button")
 let returnButton = document.getElementById("prev-button")
 
-let position = 0 // 0 is block 1
-let confirmCounter = 0;
+let position = 1
 let confirmed = false;
 let detailsIds = []
 let icons = []
@@ -58,15 +57,41 @@ const uploadToServer = () => {
             "wikicode": icon.getWikiCode()
         }))
 
+        // display standby animation
         nextButton.classList.add('standby')
+        confirmWrapper.display = 'none'
+
         fetch(uploadURI, {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 nextButton.classList.remove('standby')
+
+                // hide other steps
+                blocks.forEach(e => {
+                    e.classList.remove("active")
+                })
+
+                // show notification step
+                notifyWrapper.querySelector(".card-title").innerHTML = 'Congratulations!'
+                notifyWrapper.classList.add('active')
+
+                // add the permalink the notification area
+                let liNode = document.createElement("li")
+                liNode.innerHTML = `<a href="${data.icon.path}">${data.icon.title}</a> was uploaded`
+                notifyWrapper.querySelector("ul").appendChild(liNode)
+
+                // hide controls
+                nextButton.style.display = 'none'
+                returnButton.style.display = 'none'
+                document.querySelector('.steps-pagination').style.display = 'none'
+
+            }).catch(e => {
+                confirmWrapper.querySelector(".alert").display = 'block'
+                console.log(e)
+                confirmWrapper.querySelector(".alert").innerHTML = e
             })
     }
 }
@@ -135,10 +160,9 @@ const displayMultistepForm = () => {
 
     });
 
-
+    // set event listeners on PrevButton and nextButton
     blockButtonControllers.forEach(controller => {
         controller.addEventListener('click', (e) => {
-
             // check whether button is "Next" or "Prev"
             let type = (controller.id === "prev-button") ? "prev" : "next"
 
@@ -147,12 +171,10 @@ const displayMultistepForm = () => {
             } else {
                 position -= 1
             }
-            confirmCounter = position
+            console.log(position)
 
             // set position min and max
-            if (position >= blocks.length - 1) {
-                position = blocks.length - 1
-
+            if (position >= 3) {
                 // hide button-prev
                 confirmButton.innerHTML = 'Confirm <i class="fa fa fa-check"></i> '
             } else {
@@ -165,8 +187,8 @@ const displayMultistepForm = () => {
                 returnButton.style.display = "none"
             }
 
-            // show buttons accordingly
-            if (position == 1) {
+            // show buttons once we reach 2nd step
+            if (position >= 1) {
                 returnButton.style.display = "inline-block"
                 confirmButton.style.display = "inline-block"
             }
@@ -182,11 +204,14 @@ const displayMultistepForm = () => {
             })
 
             // activate the current controller and block 
-            blockIndicators[position].classList.add("active")
-            blocks[position].classList.add("active")
+            if (position <= 3) { // step 4 is handled separately below
+                blockIndicators[position - 1].classList.add("active")
+                blocks[position - 1].classList.add("active")
+            }
 
-            if (type === "next" && confirmCounter == blocks.length /*&& !confirmed*/ ) {
-
+            // upload to server on step 3
+            if (type === "next" && position >= 4 /*&& !confirmed*/ ) {
+                position = blocks.length - 1
                 confirmed = true; // reset
                 uploadToServer(); // push to backend
             }

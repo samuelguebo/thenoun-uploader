@@ -39,7 +39,11 @@ class FileManager
                 // prepare submission to Mediawiki API
                 $icon = new Icon($data->title, $data->author, $data->wikicode, $path);
                 $wiki = new MediaWiki;
-                return $wiki->uploadFile($icon);
+                $result = $wiki->uploadFile($icon);
+
+                // if there are still no errors, remove the file from folder
+                unlink($path);
+                return $result;
             }
         }catch (Exception $e){
             return false;

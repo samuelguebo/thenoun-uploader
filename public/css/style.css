@@ -106,6 +106,10 @@ p.tou-description {
 	align-items: center;
 }
 
+.steps-blocks .confirm .alert {
+	display: none;
+}
+
 .steps-pagination {
 	display: flex;
 	align-items: center;
@@ -151,10 +155,4 @@ p.tou-description {
 
 .steps-pagination a.active {
 	color: #007bff;
-}
-
-.filepond--root {}
-
-.filepond--panel-root {
-	/* min-height: 50px; */
 }
