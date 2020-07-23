@@ -40,7 +40,7 @@
               <div class="card-body">
                 <h5 class="card-title">Last verifications</h5>   
                 <p class="card-text">Please double check the details below and press the confirmation button once you are ready to complete the upload process.</p>
-                <ol class="files"></ol>
+                <ul class="files"></ul>
               </div>
             </div> 
           </div>
