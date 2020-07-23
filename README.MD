@@ -1,6 +1,7 @@
 # The Noun Uploader
-Drag and drop uploader for icons from The Noun project
 ![PHP Composer](https://github.com/samuelguebo/thenoun-uploader/workflows/PHP%20Composer/badge.svg)
+
+Drag and drop uploader for icons from The Noun project
 
 ## Configuration
 Rename `settings-sample.php` to `settings.php` and change its parameters according to your Oauth consumer app. Checkout [Mediawiki's documentation ](https://www.mediawiki.org/wiki/Help:OAuth) for more details on creating your Oauth credentials.

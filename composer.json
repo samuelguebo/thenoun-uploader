@@ -16,7 +16,7 @@
         "phpunit/phpunit": "^9.1"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests --colors=always",
+        "test": "./vendor/bin/phpunit tests --colors=always --configuration=./phpunit.xml",
         "run-dev": "php -S localhost:5000"
     }
 }
