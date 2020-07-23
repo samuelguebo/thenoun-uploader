@@ -58,12 +58,16 @@ const uploadToServer = () => {
             "wikicode": icon.getWikiCode()
         }))
 
+        Mo nextButton.classList.add('standby')
         fetch(uploadURI, {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
-            .then(data => console.log(data))
+            .then(data => {
+                console.log(data)
+                nextButton.classList.remove('standby')
+            })
     }
 }
 
@@ -182,6 +186,7 @@ const displayMultistepForm = () => {
             blocks[position].classList.add("active")
 
             if (type === "next" && confirmCounter == blocks.length /*&& !confirmed*/ ) {
+
                 confirmed = true; // reset
                 uploadToServer(); // push to backend
             }

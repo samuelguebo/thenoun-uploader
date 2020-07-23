@@ -42,6 +42,30 @@ body {
 	display: none;
 }
 
+.standby {
+	background-color: #cecece;
+}
+
+.standby i {
+	animation: rotate 2s linear infinite;
+}
+
+.standby i::before {
+	content: "\f110";
+
+
+}
+
+@keyframes rotate {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 /* Footer */
 #footer {
 	/*position: absolute;*/

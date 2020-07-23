@@ -52,8 +52,7 @@ class Icon {
         let iconId = this.getId()
         let iconTitle = this.getTitle()
         let authorName = this.getAuthor()
-        let authorLink = `https://thenounproject.com/icon/${iconId}
-        `
+        let authorLink = `https://thenounproject.com/icon/${iconId}`
         let wikiCode = `=={{int:filedesc}}==\n`
         wikiCode += `{{Information\n`
         wikiCode += `|description={{en|1=${iconTitle}}}\n`
