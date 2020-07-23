@@ -9,6 +9,7 @@ class Icon {
     public $title;
     public $author;
     public $wikicode;
+    public $path;
     
         
     /**
@@ -19,9 +20,10 @@ class Icon {
      * @param  string $wikicode
      * @return void
      */
-    function __constructor($title, $author, $wikicode) {
+    function __construct($title, $author, $wikicode, $path) {
         $this->title  = $title;
         $this->author = $author;
-        $this->author = $wikicode;
+        $this->wikicode = $wikicode;
+        $this->path   = $path;
     }
 }
