@@ -58,7 +58,7 @@ const uploadToServer = () => {
             "wikicode": icon.getWikiCode()
         }))
 
-        Mo nextButton.classList.add('standby')
+        nextButton.classList.add('standby')
         fetch(uploadURI, {
                 method: 'POST',
                 body: formData
