@@ -29,6 +29,3 @@ jobs:
     - name: Install dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Run test suite
-      run: phpunit tests --bootstrap="vendor/autoload.php" --colors=always
