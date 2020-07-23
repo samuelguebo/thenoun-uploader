@@ -1,6 +1,7 @@
 <?php namespace Thenoun\Controllers;
 
 use Thenoun\Models\Icon;
+use Thenoun\Utils\FileManager;
 /**
  * Controller handling file upload
  */
@@ -24,35 +25,22 @@ class UploadController extends Controller
             $message['status'] = 200;
             $message['message'] = $error_not_found;
             echo json_encode($message);
+            die();
         }
         
-        $files = $_FILES;
-        $metadata = $_POST;
-        // Create temporary directory if inexistent
-        $tmp_dir = ROOT . '/src/tmp';
-        if (!file_exists($tmp_dir)) {
-            mkdir($tmp_dir, 0777, true);
+        $response = FileManager::upload($_FILES, $_POST);
+        if($response != false) {
+            // If there are no errors
+            $message['status'] = 200;
+            $message['message'] = "success";
+            $message['url'] = $response;
+        }else {
+            $message['status'] = 400;
+            $message['message'] = $error_not_found;
         }
         
-        // Move files in it
-        $filesProcessed = array();
-        for ($i=0; $i < count($files) ; $i++) { 
-            // move file to temporary directory
-            move_uploaded_file($file['tmp_name'], $tmp_dir. "/" . $file['name']);
-
-            // prepare submission to Mediawiki API
-            $data = $metadata[$i];
-            $icon = new Icon($data['title'], $data['author'], $data['title']);
-            $filesProcessed[] = $icon;
-        }
-        
-        
-
-        $message['status'] = 200;
-        $message['files'] = $filesProcessed;
-        $message['others'] = $_POST;
         echo json_encode($message);
-
+        die();
         
     }
 }

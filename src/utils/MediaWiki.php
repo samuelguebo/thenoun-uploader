@@ -391,5 +391,71 @@ class MediaWiki
     
     }
 
+    /**
+     * For now, only edit a sandbox on Wikimedia Commons
+     * Once the test are conclusive, the logic will
+     * be replaced with the actual upload process
+     *
+     * @param  mixed $icon
+     * @return string / error
+     */
+    public function uploadFile($icon)
+    {
+        $this->updateSessionToken();
+        $ch = null;
+
+        // 1. fetch the username
+        $res = $this->makeRequest(array(
+            'format' => 'json',
+            'action' => 'query',
+            'meta' => 'userinfo',
+        ), $ch);
+
+        if (isset($res->error->code) && $res->error->code === 'mwoauth-invalid-authorization') {
+            // We're not authorized!
+            throw new Exception('You haven\'t authorized this application yet!');
+        }
+
+        if (!isset($res->query->userinfo)) {
+            throw new Exception("$this->errorCode Internal Server Error");
+        }
+        if (isset($res->query->userinfo->anon)) {
+            throw new Exception("HTTP/1.1 $this->errorCode Internal Server Error");
+        }
+        
+        $page = "User:African_Hope/TheNounProject";
+        
+        // 2. fetch the edit token
+        $res = $this->makeRequest(array(
+            'format' => 'json',
+            'action' => 'tokens',
+            'type' => 'edit',
+        ), $ch);
+        if (!isset($res->tokens->edittoken)) {
+            header("HTTP/1.1 $this->errorCode Internal Server Error");
+            echo 'Bad API response: <pre>' . htmlspecialchars(var_export($res, 1)) . '</pre>';
+            exit(0);
+        }
+        $token = $res->tokens->edittoken;
+        
+        // 3. Perform the edit
+        /*
+        $res = $this->makeRequest( array(
+        'format' => 'json',
+        'action' => 'edit',
+        'title' => $page,
+        'section' => 'new',
+        'sectiontitle' => $icon->title,
+        'text' => $icon->wikicode,
+        'summary' => 'Bot:CivBot/ [[Commons:Batch uploading/TheNounProject|Batch uploading/TheNounProject]]',
+        'watchlist' => 'nochange',
+        'token' => $token,
+        ), $ch );
+
+        */
+
+        return "https://commons.wikimedia.org/wiki/" . str_replace(' ', '_', $icon->title);
+    }
+
 
 }
