@@ -454,7 +454,10 @@ class MediaWiki
 
         */
 
-        return "https://commons.wikimedia.org/wiki/" . str_replace(' ', '_', $icon->title);
+        $icon->path  = "https://commons.wikimedia.org/wiki/";
+        $icon->path .= str_replace(' ', '_', $icon->title);
+
+        return $icon;
     }
 
 

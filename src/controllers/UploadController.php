@@ -33,7 +33,7 @@ class UploadController extends Controller
             // If there are no errors
             $message['status'] = 200;
             $message['message'] = "success";
-            $message['url'] = $response;
+            $message['icon'] = $response;
         }else {
             $message['status'] = 400;
             $message['message'] = $error_not_found;

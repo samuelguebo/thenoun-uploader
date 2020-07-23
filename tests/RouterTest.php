@@ -8,6 +8,7 @@ class RouterTest extends TestCase{
     function testCanCreateRouter() {
         $_SERVER['REQUEST_URI'] = null;
         $router = new Router(null, null);
-        $this->assertEquals(4, 4);
+        
+        $this->assertEquals(is_object($router), true);
     }
 }
