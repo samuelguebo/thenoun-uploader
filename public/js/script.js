@@ -17,13 +17,18 @@ const pond = FilePond.create(
 let blocks = document.querySelectorAll(".steps-blocks .step")
 let blockIndicators = Array.from(document.querySelectorAll(".steps-pagination a"))
 let blockButtonControllers = document.querySelectorAll(".steps-buttons button")
+let nextButton = document.getElementById('next-button')
+let detailsWrapper = document.querySelector('.steps-blocks .details')
+let confirmWrapper = document.querySelector('.steps-blocks .confirm')
 let confirmButton = document.getElementById("next-button")
 let returnButton = document.getElementById("prev-button")
+
 let position = 0 // 0 is block 1
 let confirmCounter = 0;
 let confirmed = false;
+let detailsIds = []
+let icons = []
 
-// override Pond upload
 pond.setOptions({
     server: {
         url: uploadURI,
@@ -41,16 +46,18 @@ pond.setOptions({
  * processing (i.e: send to wiki, etc.)
  */
 const uploadToServer = () => {
-    //pond.processFiles().then(files => {
-    let files = pond.getFiles()
     // done processing files
     let formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        formData.append(file.file.name, file.file)
+
+    for (let i = 0; i < icons.length; i++) {
+        const icon = icons[i];
+        formData.append(icon.getFileName(), icon.getFile())
+        formData.append(icon.getFileName(), icon.getAuthor())
+        formData.append(icon.getFileName(), icon.getWikiCode())
 
     }
+
     // post data
     fetch(uploadURI, {
             method: 'POST',
@@ -65,20 +72,66 @@ const uploadToServer = () => {
  * Manage the appearing and dispearing of 
  * each part of the multistep form
  */
-
 const displayMultistepForm = () => {
     // show nextButton when a file is added
     pond.on('addfile', (error, file) => {
         confirmButton.style.display = 'block';
+
+        file = file.file // restructure object
+        // file content can only be read asynchronously
+        const reader = new FileReader();
+        let icon = new Icon(file)
+        reader.onload = (f) => {
+            f["name"] = icon.getFile().name
+            icon.content = f.target.result
+            let detailsForm = document.createElement('div')
+            detailsForm.classList.add("card")
+            detailsForm.innerHTML = formDetailTemplate(icon)
+
+            // add form details but avoid duplication
+            if (detailsIds.indexOf(icon.getFile().name) < 0) {
+                detailsWrapper.appendChild(detailsForm)
+                detailsIds.push(icon.getFile().name)
+                icons.push(icon)
+
+                // summarize the file list for confirmation                        
+                let liNode = document.createElement("li")
+                liNode.innerHTML = `${icon.getTitle()}, by ${icon.getAuthor()}`
+                confirmWrapper.querySelector("ul").appendChild(liNode)
+            }
+
+        }
+
+        reader.readAsText(file)
     });
 
+    // remove relevant card from details block when an icon is removed
+    pond.beforeRemoveFile = (file => {
+        // disable this feature until we reach step 2
+
+        // otherwise, proceed
+        let cardPosition = null
+        let files = pond.getFiles()
+        files.forEach(f => {
+            if (f.id === file.id) {
+                cardPosition = files.indexOf(f)
+                detailsIds.pop(file.file.name)
+            }
+        })
+        console.log("position", cardPosition)
+        detailsWrapper.querySelector(`div:nth-child(${cardPosition+1})`).remove()
+        return true
+
+    })
     // hide nextButton when there are no files
     pond.on('removefile', (error, file) => {
         let files = pond.getFiles()
         // Hide upload button
         if (files.length < 1)
             confirmButton.style.display = 'none';
+
     });
+
 
     blockButtonControllers.forEach(controller => {
         controller.addEventListener('click', (e) => {
@@ -129,7 +182,7 @@ const displayMultistepForm = () => {
             blockIndicators[position].classList.add("active")
             blocks[position].classList.add("active")
 
-            if (type === "next" && confirmCounter == blocks.length && !confirmed) {
+            if (type === "next" && confirmCounter == blocks.length /*&& !confirmed*/ ) {
                 confirmed = true; // reset
                 uploadToServer(); // push to backend
             }
@@ -140,55 +193,8 @@ const displayMultistepForm = () => {
 }
 
 /**
- * Generate forms with details for each
- * icons that was uploaded
- */
-const handleIconDescriptions = () => {
-    let nextButton = document.getElementById('next-button')
-    let detailsWrapper = document.querySelector('.steps-blocks .details')
-    let confirmWrapper = document.querySelector('.steps-blocks .confirm')
-    let detailsIds = []
-
-    // update DOM automatically
-    nextButton.addEventListener('click', e => {
-        let files = pond.getFiles()
-        let icons = []
-
-        files.forEach(file => {
-            file = file.file // restructure object
-            // file content can only be read asynchronously
-            const reader = new FileReader();
-            reader.onload = (f) => {
-                f["name"] = file.name
-                let icon = new Icon(f)
-                let detailsForm = document.createElement('div')
-                detailsForm.classList.add("card")
-                detailsForm.innerHTML = formDetailTemplate(icon)
-
-                // add form details but avoid duplication
-                if (detailsIds.indexOf(icon.getId()) < 0) {
-                    detailsWrapper.appendChild(detailsForm)
-                    detailsIds.push(icon.getId())
-                    icons.push(icon)
-
-                    // summarize the file list for confirmation                        
-                    let liNode = document.createElement("li")
-                    liNode.innerHTML = `${icon.getTitle()}, by ${icon.getAuthor()}`
-                    confirmWrapper.querySelector("ol").appendChild(liNode)
-                }
-
-            }
-
-            reader.readAsText(file)
-        })
-
-
-    })
-}
-
-/**
  * Boilerplate that uses details from an Icon object
- * and generate HTML code
+ * and generates HTML code
  * 
  * @param {Icon object} icon 
  * @returns String HTML code
@@ -216,7 +222,6 @@ const formDetailTemplate = (icon) => {
  */
 const initListeners = () => {
     displayMultistepForm()
-    handleIconDescriptions()
 }
 
 initListeners() // trigger event listeners

@@ -1,8 +1,7 @@
 class Icon {
-
+    content = null;
     constructor(file) {
         this.file = file
-        this.content = file.target.result
     }
 
     getFileName() {
@@ -74,6 +73,10 @@ class Icon {
 
     getExtension = () => {
         return this.file.name.match(/\.[0-9a-z]+$/i)[0]
+    }
+
+    getFile = () => {
+        return this.file
     }
 
 
