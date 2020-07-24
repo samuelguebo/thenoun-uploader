@@ -439,7 +439,7 @@ class MediaWiki
         $token = $res->tokens->edittoken;
         
         // 3. Perform the edit
-        /*
+        
         $res = $this->makeRequest( array(
         'format' => 'json',
         'action' => 'edit',
@@ -452,7 +452,6 @@ class MediaWiki
         'token' => $token,
         ), $ch );
 
-        */
 
         $icon->path  = "https://commons.wikimedia.org/wiki/";
         $icon->path .= str_replace(' ', '_', $icon->title);
