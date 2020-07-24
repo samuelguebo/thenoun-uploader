@@ -1,4 +1,8 @@
-<?php namespace Thenoun\Utils;
+<?php
+
+namespace Thenoun\Utils;
+
+use Thenoun\Controllers\NotFoundController;
 
 /**
  * Router responsible for redirecting
@@ -47,7 +51,7 @@ class Router
 
         }
 
-        Thenoun\Controllers\NotFoundController::print();
+        NotFoundController::print();
     }
 
     /**
@@ -67,7 +71,7 @@ class Router
 
     /**
      * Setup the session cookie
-     * @return void
+     * @return array
      */
     public static function getSession()
     {
