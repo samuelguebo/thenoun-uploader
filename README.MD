@@ -4,10 +4,11 @@
 ![PHP Composer](https://github.com/samuelguebo/thenoun-uploader/workflows/PHP%20Composer/badge.svg) ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 Drag and drop uploader for icons from The Noun project. It provides a convenient and quick process for importing into Commons icons that were previously downloaded from [thenounproject.com](https://thenounproject.com/)
+![](https://thenoun-uploader.toolforge.org/medias/thenoun-uploader-screenshot.png)
 
 ## Requirements
 
-* [PHP 5.3+](https://www.php.net/downloads.php)
+* [PHP 7.3+](https://www.php.net/downloads.php)
 * [Composer (PHP dependency manager)](https://getcomposer.org/download/)
 
 ## Installing dependencies
