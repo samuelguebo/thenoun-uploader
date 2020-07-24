@@ -6,7 +6,7 @@ use Thenoun\Controllers\AuthController;
  * it can be extended to create
  * additional REST controllers
  */
-class Controller{
+abstract class Controller{
     public function __construct () {
         
     }
