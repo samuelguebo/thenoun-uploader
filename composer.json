@@ -1,7 +1,7 @@
 {
     "name": "sguebo/thenoun-project",
     "license": "MIT",
-    "description": "",
+    "description": "Drag and drop uploader for icons from The Noun project.",
 
     "authors": [{
         "name": "Samuel Guebo",
@@ -13,10 +13,10 @@
         }
     },
     "require": {
-        "phpunit/phpunit": "^9.1"
+        "phpunit/phpunit": "^8.5.1"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests --colors=always --bootstrap=vendor/autoload.php",
+        "test": "./vendor/bin/phpunit tests --colors=always --bootstrap vendor/autoload.php",
         "run-dev": "php -S localhost:5000"
     }
 }
