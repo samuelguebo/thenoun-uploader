@@ -1,4 +1,4 @@
-/src/config/settings.php
+/src/Config/settings.php
 /vendor/
-/src/tmp
+/tmp
 .idea/

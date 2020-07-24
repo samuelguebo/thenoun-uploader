@@ -34,7 +34,7 @@ class Router
             $endpoint = explode("?", $this->request)[0];
             if ($route['endpoint'] === $endpoint) {
                 // If class exists, use it
-                $class = "Thenoun\Controllers\\" .$route['controller'];
+                $class = "Thenoun\\Controllers\\" .$route['controller'];
                 
                 if (class_exists($class)) {
                     $controller = (new $class());

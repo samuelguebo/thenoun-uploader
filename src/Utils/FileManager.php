@@ -22,7 +22,7 @@ class FileManager
         
         try {
             // Create temporary directory if inexistent
-            $tmp_dir = ROOT . '/src/tmp';
+            $tmp_dir = ROOT . '/tmp';
             if (!file_exists($tmp_dir)) {
                 mkdir($tmp_dir, 0777, true);
             }
