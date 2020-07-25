@@ -23,8 +23,8 @@
     },
     "scripts": {
         "test": [
-            "parallel-lint . --exclude vendor --exclude node_modules",
-            "phpcs -p -s -n",
+            "parallel-lint . --exclude vendor",
+            "phpcs -p -s",
             "minus-x check .",
             "./vendor/bin/phpunit tests --colors=always --bootstrap vendor/autoload.php"
         ],
