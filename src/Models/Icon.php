@@ -6,24 +6,24 @@ namespace Thenoun\Models;
  * and passed to the Mediawiki API
  */
 class Icon {
-    public $title;
-    public $author;
-    public $wikicode;
-    public $path;
-    
-        
-    /**
-     * Default constructor
-     *
-     * @param  string $title
-     * @param  string $author
-     * @param  string $wikicode
-     * @return void
-     */
-    function __construct($title, $author, $wikicode, $path) {
-        $this->title  = $title;
-        $this->author = $author;
-        $this->wikicode = $wikicode;
-        $this->path   = $path;
-    }
+	public $title;
+	public $author;
+	public $wikicode;
+	public $path;
+
+	/**
+	 * Default constructor
+	 *
+	 * @param string $title
+	 * @param string $author
+	 * @param string $wikicode
+	 * @param string $path
+	 * @return void
+	 */
+	public function __construct( $title, $author, $wikicode, $path ) {
+		$this->title  = $title;
+		$this->author = $author;
+		$this->wikicode = $wikicode;
+		$this->path   = $path;
+	}
 }
