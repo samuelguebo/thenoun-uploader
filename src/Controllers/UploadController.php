@@ -5,7 +5,7 @@ use Thenoun\Utils\FileManager;
 /**
  * Controller handling file upload
  */
-class UploadController extends Controller {
+class UploadController extends AbstractController {
 
 	/**
 	 * Handled upload of files

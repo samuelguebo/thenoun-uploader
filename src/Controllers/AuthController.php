@@ -6,7 +6,7 @@ use Thenoun\Utils\Router;
 /**
  * Authentication mechanism
  */
-class AuthController extends Controller {
+class AuthController extends AbstractController {
 	/**
 	 * Login route
 	 *

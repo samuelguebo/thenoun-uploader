@@ -5,7 +5,7 @@ use Thenoun\Utils\MediaWiki;
 /**
  * Controller handling homepage
  */
-class HomeController extends Controller {
+class HomeController extends AbstractController {
 	/**
 	 * Rest endpoint for route `/`
 	 * it matches GET requests

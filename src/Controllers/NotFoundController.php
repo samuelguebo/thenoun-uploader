@@ -6,7 +6,7 @@ namespace Thenoun\Controllers;
  * REST Controller for Job entities
  * and their relevant endpoints
  */
-class NotFoundController extends Controller {
+class NotFoundController extends AbstractController {
 	/**
 	 * Return error message
 	 * in Json format
