@@ -30,7 +30,7 @@
 						<a class="btn btn-primary btn-lg btn-login md-opjjpmhoiojifppkkcdabiobhakljdgm_doc" href="/login"
 							role="button"><i class="fa fa-sign-in"></i> Login with Wikimedia</a>
 					</p>
-					<p class="tou-description">By logging in, you agree to the <a href="https://wikitech.wikimedia.org/wiki/Wikitech:Labs_Terms_of_use">Wikimedia Labs Terms of Use</a></p>
+					<p class="tou-description">By logging in, you agree to the <a href="https://wikitech.wikimedia.org/wiki/Wikitech:Cloud_Services_Terms_of_use">Wikimedia Cloud Services Terms of Use</a></p>
 				</div>
 		<br>
 		<br>

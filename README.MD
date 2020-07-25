@@ -38,4 +38,4 @@ composer test
 - Consider [wikimedia/toolforge-bundle](https://packagist.org/packages/wikimedia/toolforge-bundle) for better structure and long-term maintenance
 
 ## Contributors 
- * Samuel Guebo ([@samuelguebo](https://twitter/com/samuelguebo))
+ * Samuel Guebo ([@samuelguebo](https://twitter.com/samuelguebo))
