@@ -33,5 +33,9 @@ Do some testing by running the following command
 composer test
 ```
 
+## Todo
+- More test coverage
+- Consider [wikimedia/toolforge-bundle](https://packagist.org/packages/wikimedia/toolforge-bundle) for better structure and long-term maintenance
+
 ## Contributors 
  * Samuel Guebo ([@samuelguebo](https://twitter/com/samuelguebo))
