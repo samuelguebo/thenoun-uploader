@@ -9,7 +9,7 @@ class Icon {
     }
 
     getId() {
-        const idReg = new RegExp(/\d{5,}/)
+        const idReg = new RegExp(/\d{1,}/g)
         let matches = this.file.name.match(idReg)
         //TODO: Handle invalid id, etc
         return matches[0]
@@ -20,7 +20,9 @@ class Icon {
         let author = nodes.getElementsByTagName('text')
         author = Array.from(author)
         author = author.map((text) => text.childNodes[0].nodeValue)
-        return author[0].replace('Created by ', '')
+        if (author.length > 0)
+            return author[0].replace('Created by ', '')
+        return 'The Noun Project'
     }
 
     getCleanVersion = () => {
@@ -37,8 +39,7 @@ class Icon {
     }
 
     getTitle = () => {
-        //let fileReg = new RegExp(/(noun_|_\d{3,})/g)
-        let fileReg = new RegExp(/(noun_|_\d{3,}.[0-9a-z]+)/g)
+        let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
         let title = this.file.name.replace(fileReg, '')
         title = title.charAt(0).toUpperCase() + title.slice(1)
         return `File:${title} (${this.getId()}) - The Noun Project${this.getExtension()}`

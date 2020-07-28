@@ -146,7 +146,7 @@ const displayMultistepForm = () => {
                 detailsIds.pop(file.file.name)
             }
         })
-        console.log("position", cardPosition)
+        //console.log("position", cardPosition)
         detailsWrapper.querySelector(`div:nth-child(${cardPosition+1})`).remove()
         return true
 
@@ -171,7 +171,7 @@ const displayMultistepForm = () => {
             } else {
                 position -= 1
             }
-            console.log(position)
+            //console.log(position)
 
             // set position min and max
             if (position >= 3) {
