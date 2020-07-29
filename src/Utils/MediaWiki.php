@@ -428,7 +428,6 @@ class MediaWiki {
 		$token = $res->tokens->edittoken;
 
 		// 3. Perform the edit
-
 		$res = $this->makeRequest( [
 		'format' => 'json',
 		'action' => 'edit',

@@ -50,10 +50,11 @@ const uploadToServer = () => {
 
         const icon = icons[i];
         let formData = new FormData();
-        formData.append(icon.getFileName(), icon.getFile())
         formData.append("icon", JSON.stringify({
-            "title": icon.getTitle(),
             "author": icon.getAuthor(),
+            "content": icon.getCleanVersion(),
+            "filename": icon.getFileName(),
+            "title": icon.getTitle(),
             "wikicode": icon.getWikiCode()
         }))
 

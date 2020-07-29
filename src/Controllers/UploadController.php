@@ -18,15 +18,15 @@ class UploadController extends AbstractController {
 		// Handle error
 		$error_not_found = "An error occured during upload. Please try again.";
 		$files = $_FILES;
-		$metadata = filter_input_array( INPUT_POST );
-		if ( !isset( $files ) || !isset( $metadata ) ) {
+		$data = filter_input_array( INPUT_POST );
+		if ( !isset( $data ) ) {
 			$message['status'] = 200;
 			$message['message'] = $error_not_found;
 			echo json_encode( $message );
 			die();
 		}
 
-		$response = FileManager::upload( $files, $metadata );
+		$response = FileManager::upload( $data );
 		if ( $response != false ) {
 			// If there are no errors
 			$message['status'] = 200;

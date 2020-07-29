@@ -12,11 +12,10 @@ class FileManager {
 	 * Uploading file by leveraging
 	 * the Mediawiki helper
 	 *
-	 * @param mixed $files
-	 * @param mixed $metadata
+	 * @param mixed $data
 	 * @return void
 	 */
-	public static function upload( $files, $metadata ) {
+	public static function upload( $data ) {
 		try {
 			// Create temporary directory if inexistent
 			$tmp_dir = ROOT . '/tmp';
@@ -24,24 +23,21 @@ class FileManager {
 				mkdir( $tmp_dir, 0777, true );
 			}
 
-			// Move files in it
-			$filesProcessed = [];
-			$data = json_decode( $metadata["icon"] );
-			foreach ( $files as $file ) {
+			$icon = json_decode( $data["icon"] );
 
-				// move file to temporary directory
-				$path = $tmp_dir . "/" . $file['name'];
-				move_uploaded_file( $file['tmp_name'], $path );
+			// create file in temporary directory
+			$path = $tmp_dir . "/" . $icon->filename;
+			file_put_contents( $path, $icon->content );
 
-				// prepare submission to Mediawiki API
-				$icon = new Icon( $data->title, $data->author, $data->wikicode, $path );
-				$wiki = new MediaWiki;
-				$result = $wiki->uploadFile( $icon );
+			// prepare submission to Mediawiki API
+			$wiki = new MediaWiki;
+			$icon = new Icon( $icon->title, $icon->author, $icon->wikicode, $path );
+			$result = $wiki->uploadFile( $icon );
 
-				// if there are still no errors, remove the file from folder
-				unlink( $path );
-				return $result;
-			}
+			// if there are still no errors, remove the file from folder
+			unlink( $path );
+			return $result;
+
 		}catch ( Exception $e ) {
 			return false;
 		}
