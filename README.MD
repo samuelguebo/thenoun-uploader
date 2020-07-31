@@ -33,6 +33,9 @@ Do some testing by running the following command
 composer test
 ```
 
+## Credits
+- [Filepond](https://github.com/pqina/filepond), a JavaScript upload library
+
 ## Todo
 - More test coverage
 - Consider [wikimedia/toolforge-bundle](https://packagist.org/packages/wikimedia/toolforge-bundle) for better structure and long-term maintenance
