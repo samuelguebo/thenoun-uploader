@@ -4,17 +4,9 @@ class Icon {
         this.file = file
     }
 
-    getFileName() {
-        return this.file.name;
-    }
-
-    getId() {
-        const idReg = new RegExp(/\d{1,}/g)
-        let matches = this.file.name.match(idReg)
-        //TODO: Handle invalid id, etc
-        return matches[0]
-
-    }
+    /**
+     * Getter for Icon's author
+     */
     getAuthor = () => {
         let nodes = this.getNodes()
         let author = nodes.getElementsByTagName('text')
@@ -25,6 +17,10 @@ class Icon {
         return 'The Noun Project'
     }
 
+    /**
+     * Getter for obtaining the SVG code
+     * free from inline credit
+     */
     getCleanVersion = () => {
         let creditReg = new RegExp(/<text(|\s+[^>]*)>(.*?)<\/text\s*>/g)
         // strip hard-coded credit
@@ -35,6 +31,62 @@ class Icon {
         return cleanedIcon
     }
 
+    /**
+     * Getter for file extension
+     */
+    getExtension = () => {
+        return this.file.name.match(/\.[0-9a-z]+$/i)[0]
+    }
+
+    /**
+     * Getter returing a file object
+     */
+    getFile = () => {
+        return this.file
+    }
+
+    /**
+     * Getter for filename
+     */
+    getFileName() {
+        return this.file.name;
+    }
+
+    /**
+     * Getter for Icon ID
+     */
+    getId() {
+        const idReg = new RegExp(/\d{1,}/g)
+        let matches = this.file.name.match(idReg)
+        //TODO: Handle invalid id, etc
+        return matches[0]
+
+    }
+
+    /**
+     * Inner utility for parsing and 
+     * traversing SVG nodes
+     */
+    getNodes = () => {
+        let parser = new DOMParser()
+        let xmlNodes = parser.parseFromString(this.content, 'text/xml')
+        return xmlNodes
+    }
+
+    /**
+     * Getter for Icon's title
+     */
+    getTitle = () => {
+        let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
+        let title = this.file.name.replace(fileReg, '')
+        title = title.charAt(0).toUpperCase() + title.slice(1)
+        return `File:${title} (${this.getId()}) - The Noun Project${this.getExtension()}`
+    }
+
+    /**
+     * Utility method for resizing viewBox and
+     * harmonizing its dimension
+     */
     updateSvgViewBox = () => {
         // harmonize viewBox size
         let viewBoxReg = new RegExp(/viewBox="(\d[ ]?){1,}"/g)
@@ -48,19 +100,11 @@ class Icon {
         return this.content
     }
 
-    getNodes = () => {
-        let parser = new DOMParser()
-        let xmlNodes = parser.parseFromString(this.content, 'text/xml')
-        return xmlNodes
-    }
-
-    getTitle = () => {
-        let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
-        let title = this.file.name.replace(fileReg, '')
-        title = title.charAt(0).toUpperCase() + title.slice(1)
-        return `File:${title} (${this.getId()}) - The Noun Project${this.getExtension()}`
-    }
-
+    /**
+     * Getter for rendered wikicode
+     * It's useful for populating
+     * the icon's page on Commons
+     */
     getWikiCode = () => {
         let today = new Date()
         let fullYear = today.getFullYear()
@@ -85,14 +129,6 @@ class Icon {
         wikiCode += `{{The Noun Project}}`
 
         return wikiCode
-    }
-
-    getExtension = () => {
-        return this.file.name.match(/\.[0-9a-z]+$/i)[0]
-    }
-
-    getFile = () => {
-        return this.file
     }
 
 
