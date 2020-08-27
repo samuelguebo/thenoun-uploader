@@ -24,11 +24,11 @@ class Icon {
     getCleanVersion = () => {
         let creditReg = new RegExp(/<text(|\s+[^>]*)>(.*?)<\/text\s*>/g)
         // strip hard-coded credit
-        let cleanedIcon = this.content.replace(creditReg, '')
+        this.content = this.content.replace(creditReg, '')
 
         // update SVG viewbox dimension
-        cleanedIcon = this.updateSvgViewBox()
-        return cleanedIcon
+        this.content = this.updateSvgViewBox()
+        return this.content
     }
 
     /**
@@ -92,11 +92,11 @@ class Icon {
         let viewBoxReg = new RegExp(/viewBox="(\d[ ]?){1,}"/g)
         let viewBox = this.content.match(viewBoxReg)[0]
         let viewBoxCorners = viewBox.match(new RegExp(/\d{1,}/g))
-        let viewBoxTop = viewBoxCorners[viewBoxCorners.length - 1]
+        let viewBoxTop = viewBoxCorners[viewBoxCorners.length - 2]
         let newViewBox = `viewBox="0 0 ${viewBoxTop} ${viewBoxTop}"`
 
         // update viewBox in svg content
-        this.content = this.content.replace(viewBoxRegex, newViewBox)
+        this.content = this.content.replace(viewBoxReg, newViewBox)
         return this.content
     }
 

@@ -35,7 +35,7 @@ class FileManager {
 			$result = $wiki->uploadFile( $icon );
 
 			// if there are still no errors, remove the file from folder
-			unlink( $path );
+			//unlink( $path );
 			return $result;
 
 		}catch ( Exception $e ) {
