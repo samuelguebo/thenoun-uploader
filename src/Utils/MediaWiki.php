@@ -382,10 +382,64 @@ class MediaWiki {
 	}
 
 	/**
-	 * For now, only edit a sandbox on Wikimedia Commons
-	 * Once the test are conclusive, the logic will
-	 * be replaced with the actual upload process
+	 * Edit a sandbox on Wikimedia Commons
 	 *
+	 * @param mixed $page
+	 * @return string / error
+	 */
+	public function editPage( $page ) {
+		$this->updateSessionToken();
+		$ch = null;
+
+		// 1. fetch the username
+		$res = $this->makeRequest( [
+			'format' => 'json',
+			'action' => 'query',
+			'meta' => 'userinfo',
+		], $ch );
+// Insert wikicode in page
+		if ( isset( $res->error->code ) && $res->error->code === 'mwoauth-invalid-authorization' ) {
+			// We're not authorized!
+			throw new Exception( 'You haven\'t authorized this application yet!' );
+		}
+
+		if ( !isset( $res->query->userinfo ) ) {
+			throw new Exception( "$this->errorCode Internal Server Error" );
+		}
+		if ( isset( $res->query->userinfo->anon ) ) {
+			throw new Exception( "HTTP/1.1 $this->errorCode Internal Server Error" );
+		}
+
+		// 2. fetch the edit token
+		$res = $this->makeRequest( [
+			'format' => 'json',
+			'action' => 'tokens',
+			'type' => 'edit',
+		], $ch );
+		if ( !isset( $res->tokens->edittoken ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
+			exit( 0 );
+		}
+		$token = $res->tokens->edittoken;
+
+		// 3. Perform the edit
+		$res = $this->makeRequest( [
+		'format' => 'json',
+		'action' => 'edit',
+		'title' => $page->title,
+		'text' => $page->wikicode,
+		'summary' => 'Bot:CivBot/ [[Commons:Batch uploading/TheNounProject|Batch uploading/TheNounProject]]',
+		'watchlist' => 'nochange',
+		'token' => $token,
+		], $ch );
+
+		return true;
+	}
+
+	/**
+	 * Push icon file to Wikimedia Commons
+	 * while avoiding duplicates
 	 * @param mixed $icon
 	 * @return string / error
 	 */
@@ -412,38 +466,60 @@ class MediaWiki {
 			throw new Exception( "HTTP/1.1 $this->errorCode Internal Server Error" );
 		}
 
-		$page = "User:African_Hope/TheNounProject";
-
-		// 2. fetch the edit token
+		// 2. fetch the upload token
 		$res = $this->makeRequest( [
 			'format' => 'json',
 			'action' => 'tokens',
-			'type' => 'edit',
+			'type' => 'upload',
 		], $ch );
-		if ( !isset( $res->tokens->edittoken ) ) {
+		if ( !isset( $res->tokens->uploadtoken ) ) {
 			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
 			echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
 			exit( 0 );
 		}
-		$token = $res->tokens->edittoken;
+		$token = $res->tokens->uploadtoken;
 
-		// 3. Perform the edit
-		$res = $this->makeRequest( [
-		'format' => 'json',
-		'action' => 'edit',
-		'title' => $page,
-		'section' => 'new',
-		'sectiontitle' => $icon->title,
-		'text' => $icon->wikicode,
-		'summary' => 'Bot:CivBot/ [[Commons:Batch uploading/TheNounProject|Batch uploading/TheNounProject]]',
-		'watchlist' => 'nochange',
-		'token' => $token,
-		], $ch );
+		// 3. Prepare to send file
+		curl_setopt( $request, CURLOPT_POST, true );
+		curl_setopt(
+			$request,
+			CURLOPT_POSTFIELDS,
+			file( $icon->title, '@' . $icon->path )
+		);
 
-		$icon->path  = "https://commons.wikimedia.org/wiki/";
-		$icon->path .= str_replace( ' ', '_', $icon->title );
+		// 4. Perform the upload
+		try {
+			$res = $this->makeRequest( [
+			'format' => 'json',
+			'action' => 'upload',
+			'filename' => $icon->title,
+			'token' => $token,
+			"ignorewarnings" => 1
+			], $ch );
 
-		return $icon;
+			// Updating icon path
+			$icon->path  = "https://commons.wikimedia.org/wiki/";
+			$icon->path .= str_replace( ' ', '_', $icon->title );
+
+			return $icon;
+		} catch ( Exception $e ) {
+			throw $e;
+		}
 	}
 
+	/**
+	 * isFileExistent
+	 *
+	 * @param mixed $file
+	 * @return void
+	 */
+	public function isFileExistent( $file ) {
+		try {
+			$response = file_get_contents( $this->apiUrl . "?action=query&prop=revisions&titles=" . urlencode( $file->title ) . "&rvslots=*&rvprop=content&format=json" );
+			return !array_key_exists( "-1", json_decode( $response, true )['query']['pages'] );
+
+		} catch ( Exception $e ) {
+			return true;
+		}
+	}
 }

@@ -34,6 +34,10 @@ class FileManager {
 			$icon = new Icon( $icon->title, $icon->author, $icon->wikicode, $path );
 			$result = $wiki->uploadFile( $icon );
 
+			if ( $result != false ) {
+				// Insert wikicode in page
+				$wiki->editPage( $result );
+			}
 			// if there are still no errors, remove the file from folder
 			unlink( $path );
 			return $result;
