@@ -1,5 +1,9 @@
 class Icon {
     content = null;
+    title = ''
+    author = ''
+    slug = ''
+
     constructor(file) {
         this.file = file
     }
@@ -8,13 +12,19 @@ class Icon {
      * Getter for Icon's author
      */
     getAuthor = () => {
-        let nodes = this.getNodes()
-        let author = nodes.getElementsByTagName('text')
-        author = Array.from(author)
-        author = author.map((text) => text.childNodes[0].nodeValue)
-        if (author.length > 0)
-            return author[0].replace('Created by ', '')
-        return 'The Noun Project'
+        if (this.author.length < 1) {
+            let nodes = this.getNodes()
+            this.author = nodes.getElementsByTagName('text')
+            this.author = Array.from(this.author)
+            this.author = this.author.map((text) => text.childNodes[0].nodeValue)
+            if (this.author.length > 0) {
+                this.author = this.author[0].replace('Created by ', '')
+                return this.author
+            }
+            this.author = 'The Noun Project'
+        }
+
+        return this.author
     }
 
     /**
@@ -74,13 +84,36 @@ class Icon {
     }
 
     /**
+     * Get slugified ID
+     */
+    getSlug = () => {
+        let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
+        this.slug = this.file.name.replace(fileReg, '')
+        this.slug = this.slug.charAt(0).toUpperCase() + this.slug.slice(1) + this.getId()
+        return this.slug
+            .toString()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ')
+            .replace(/[^\w-]+/g, '')
+            .replace(/--+/g, '')
+    }
+
+    /**
      * Getter for Icon's title
      */
     getTitle = () => {
-        let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
-        let title = this.file.name.replace(fileReg, '')
-        title = title.charAt(0).toUpperCase() + title.slice(1)
-        return `File:${title} (${this.getId()}) - The Noun Project${this.getExtension()}`
+        if (this.title.length < 1) {
+            let fileReg = new RegExp(/(noun_|_\d{1,}.[0-9a-z]+)/g)
+            this.title = this.file.name.replace(fileReg, '')
+            this.title = this.title.charAt(0).toUpperCase() + this.title.slice(1)
+            this.title = `File:${this.title} (${this.getId()}) - The Noun Project${this.getExtension()}`
+        }
+
+        return this.title;
+
     }
 
     /**

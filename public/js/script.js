@@ -25,8 +25,7 @@ let returnButton = document.getElementById("prev-button")
 
 let position = 1
 let confirmed = false;
-let detailsIds = []
-let icons = []
+let icons = {}
 
 pond.setOptions({
     server: {
@@ -46,9 +45,8 @@ pond.setOptions({
  */
 const uploadToServer = () => {
     // Upload each file a parralel process (asynchronously)
-    for (let i = 0; i < icons.length; i++) {
+    for (let icon of Object.values(icons)) {
 
-        const icon = icons[i];
         let formData = new FormData();
         formData.append("icon", JSON.stringify({
             "author": icon.getAuthor(),
@@ -118,18 +116,27 @@ const displayMultistepForm = () => {
             detailsForm.innerHTML = formDetailTemplate(icon)
 
             // add form details but avoid duplication
-            if (detailsIds.indexOf(icon.getFile().name) < 0) {
+            if (!(icon.getSlug() in icons)) {
                 detailsWrapper.appendChild(detailsForm)
-                detailsIds.push(icon.getFile().name)
-                icons.push(icon)
 
-                // summarize the file list for confirmation                        
-                let liNode = document.createElement("li")
-                liNode.innerHTML = `${icon.getTitle()}, by ${icon.getAuthor()}`
-                confirmWrapper.querySelector("ul").appendChild(liNode)
+                // add current icon to array
+                icons[icon.getSlug()] = icon
+
+                // add event listenler
+                document.querySelectorAll(`#${icon.getSlug()} input`).forEach(input => {
+                    input.addEventListener('keyup', e => {
+                        icon.title = document.querySelector(`#${icon.getSlug()} input[name=title]`).value
+                        icon.author = document.querySelector(`#${icon.getSlug()} input[name=author]`).value
+
+                        // Refresh summary page
+                        generateSummary()
+                    })
+                })
+
             }
 
         }
+
 
         reader.readAsText(file)
     });
@@ -231,7 +238,7 @@ const displayMultistepForm = () => {
  */
 const formDetailTemplate = (icon) => {
     return `
-    <div class="card-body">
+    <div class="card-body" id="${icon.getSlug()}">
         <h5 class="card-title">${icon.getFileName()}</h5>
         <form>
         <div class="form-group">
@@ -246,6 +253,24 @@ const formDetailTemplate = (icon) => {
         </form>
     </div>`
 }
+
+/**
+ * Generate summary tab which contains
+ * a list of all icons
+ */
+const generateSummary = () => {
+    confirmWrapper.querySelector("ul").innerHTML = ""
+
+    for (let icon of Object.values(icons)) {
+        // clear previous items
+
+        // summarize the file list for confirmation                        
+        let liNode = document.createElement("li")
+        liNode.innerHTML = `${icon.getTitle()}, by ${icon.getAuthor()}`
+        confirmWrapper.querySelector("ul").appendChild(liNode)
+    }
+}
+
 /**
  * Centralize event listeners for code readability.
  * TODO: consider a better code organization
