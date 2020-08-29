@@ -68,7 +68,6 @@ class Icon {
     getId() {
         const idReg = new RegExp(/\d{1,}/g)
         let matches = this.file.name.match(idReg)
-        //TODO: Handle invalid id, etc
         return matches[0]
 
     }

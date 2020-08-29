@@ -23,19 +23,6 @@ class HomeController extends AbstractController {
 	}
 
 	/**
-	 * Testing
-	 * @param mixed $request
-	 * @return void
-	 */
-	public function test( $request ) {
-		header( "Content-Type: Application/json" );
-
-		$response = [];
-		$response['text'] = [ "echo 'Lorem ipsum dolor", $request ];
-		echo json_encode( $response );
-	}
-
-	/**
 	 * Handled upload of files
 	 *
 	 * @param mixed $request
