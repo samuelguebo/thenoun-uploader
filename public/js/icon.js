@@ -121,9 +121,9 @@ class Icon {
      */
     updateSvgViewBox = () => {
         // harmonize viewBox size
-        let viewBoxReg = new RegExp(/viewBox="(\d[ ]?){1,}"/g)
+        let viewBoxReg = new RegExp(/viewBox="(\d[. ]?){1,}"/g)
         let viewBox = this.content.match(viewBoxReg)[0]
-        let viewBoxCorners = viewBox.match(new RegExp(/\d{1,}/g))
+        let viewBoxCorners = viewBox.match(new RegExp(/(\d[.]?){1,}/g))
         let viewBoxTop = viewBoxCorners[viewBoxCorners.length - 2]
         let newViewBox = `viewBox="0 0 ${viewBoxTop} ${viewBoxTop}"`
 
