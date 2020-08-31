@@ -66,6 +66,7 @@ const uploadToServer = () => {
             })
             .then(response => response.json())
             .then(data => {
+
                 nextButton.classList.remove('standby')
 
                 // hide other steps
@@ -73,14 +74,21 @@ const uploadToServer = () => {
                     e.classList.remove("active")
                 })
 
-                // show notification step
-                notifyWrapper.querySelector(".card-title").innerHTML = 'Congratulations!'
                 notifyWrapper.classList.add('active')
 
-                // add the permalink the notification area
-                let liNode = document.createElement("li")
-                liNode.innerHTML = `<a href="${data.icon.path}">${data.icon.title}</a> was uploaded`
-                notifyWrapper.querySelector("ul").appendChild(liNode)
+                if ('icon' in data) {
+
+                    // show notification step
+                    notifyWrapper.querySelector(".card-title").innerHTML = 'Congratulations!'
+
+                    // add the permalink the notification area
+                    data.message = `<a href="${data.icon.path}">${data.icon.title}</a> was uploaded`
+                    displayApiMessage(data);
+
+                } else {
+                    notifyWrapper.classList.add('active')
+                    displayApiMessage(data);
+                }
 
                 // hide controls
                 nextButton.style.display = 'none'
@@ -88,13 +96,26 @@ const uploadToServer = () => {
                 document.querySelector('.steps-pagination').style.display = 'none'
 
             }).catch(e => {
-                confirmWrapper.querySelector(".alert").display = 'block'
                 console.log(e)
-                confirmWrapper.querySelector(".alert").innerHTML = e
+                let data = {
+                    message: `Error with ${icon.getTitle()}. Please try again.`
+                };
+
+                displayApiMessage(data);
             })
     }
 }
 
+const displayApiMessage = (data) => {
+
+    // Display errors
+    let liNode = document.createElement("li")
+    liNode.innerHTML = data.message
+    if (!('icon' in data))
+        liNode.classList.add("error")
+    notifyWrapper.querySelector("ul").appendChild(liNode)
+
+}
 /**
  * Manage the appearing and dispearing of 
  * each part of the multistep form
@@ -121,6 +142,9 @@ const displayMultistepForm = () => {
 
                 // add current icon to array
                 icons[icon.getSlug()] = icon
+
+                // Refresh summary by default
+                generateSummary()
 
                 // add event listenler
                 document.querySelectorAll(`#${icon.getSlug()} input`).forEach(input => {

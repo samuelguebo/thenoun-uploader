@@ -155,3 +155,7 @@ p.tou-description {
 .steps-pagination a.active {
 	color: #007bff;
 }
+
+.steps-blocks .notify .error {
+	color: #df1414;
+}
