@@ -5,7 +5,7 @@ use Thenoun\Utils\MediaWiki;
 
 class MediaWikiTest extends TestCase {
 	/**
-	 * Settings shared across all test methods
+	 * Settings shared across all subtest methods
 	 *
 	 * @return void
 	 */

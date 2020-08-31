@@ -1,5 +1,8 @@
 <?php namespace Thenoun\Utils;
 
+use CURLFile;
+use Exception;
+
 /**
  * Oauth mechanism largely inspired by Brad Jorsch's approach
  * See <https://tools.wmflabs.org/oauth-hello-world/>
@@ -470,22 +473,15 @@ class MediaWiki {
 		$res = $this->makeRequest( [
 			'format' => 'json',
 			'action' => 'tokens',
-			'type' => 'upload',
+			'type' => 'edit',
 		], $ch );
-		if ( !isset( $res->tokens->uploadtoken ) ) {
-			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
-			echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
-			exit( 0 );
+		if ( !isset( $res->tokens->edittoken ) ) {
+			throw new Exception( 'Got bad API response while uploading ' . $icon->title . '. Try again.' );
 		}
-		$token = $res->tokens->uploadtoken;
+		$token = $res->tokens->edittoken;
 
 		// 3. Prepare to send file
-		curl_setopt( $request, CURLOPT_POST, true );
-		curl_setopt(
-			$request,
-			CURLOPT_POSTFIELDS,
-			file( $icon->title, '@' . $icon->path )
-		);
+		$file = new CURLFile( realpath( $icon->path ), 'image/svg+xml', $icon->title );
 
 		// 4. Perform the upload
 		try {
@@ -493,15 +489,17 @@ class MediaWiki {
 			'format' => 'json',
 			'action' => 'upload',
 			'filename' => $icon->title,
+			'file' => $file,
 			'token' => $token,
 			"ignorewarnings" => 1
 			], $ch );
 
+			throw new Exception( json_encode( $res ) );
 			// Updating icon path
-			$icon->path  = "https://commons.wikimedia.org/wiki/";
-			$icon->path .= str_replace( ' ', '_', $icon->title );
+			// $icon->path  = "https://commons.wikimedia.org/wiki/";
+			// $icon->path .= str_replace( ' ', '_', $icon->title );
 
-			return $icon;
+			// return $icon;
 		} catch ( Exception $e ) {
 			throw $e;
 		}

@@ -1,5 +1,6 @@
 <?php namespace Thenoun\Utils;
 
+use Exception;
 use Thenoun\Models\Icon;
 
 /**
@@ -25,15 +26,20 @@ class FileManager {
 
 			$icon = json_decode( $data["icon"] );
 
-			// create file in temporary directory
+			// Create file in temporary directory
 			$path = $tmp_dir . "/" . $icon->filename;
 			file_put_contents( $path, $icon->content );
 
-			// prepare submission to Mediawiki API
+			// Prepare submission to Mediawiki API
 			$wiki = new MediaWiki;
 			$icon = new Icon( $icon->title, $icon->author, $icon->wikicode, $path );
-			$result = $wiki->uploadFile( $icon );
 
+			// Check whether file already exists
+			if ( $wiki->isFileExistent( $icon ) ) {
+				throw new Exception( "File already exists" );
+			}
+
+			$result = $wiki->uploadFile( $icon );
 			if ( $result != false ) {
 				// Insert wikicode in page
 				$wiki->editPage( $result );
@@ -43,7 +49,7 @@ class FileManager {
 			return $result;
 
 		}catch ( Exception $e ) {
-			return false;
+			return $e->getMessage();
 		}
 	}
 }

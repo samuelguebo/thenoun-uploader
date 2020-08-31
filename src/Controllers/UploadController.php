@@ -1,5 +1,6 @@
 <?php namespace Thenoun\Controllers;
 
+use Thenoun\Models\Icon;
 use Thenoun\Utils\FileManager;
 
 /**
@@ -27,14 +28,14 @@ class UploadController extends AbstractController {
 		}
 
 		$response = FileManager::upload( $data );
-		if ( $response != false ) {
+		if ( $response instanceof Icon ) {
 			// If there are no errors
 			$message['status'] = 200;
 			$message['message'] = "success";
 			$message['icon'] = $response;
 		} else {
 			$message['status'] = 400;
-			$message['message'] = $error_not_found;
+			$message['message'] = $response;
 		}
 
 		echo json_encode( $message );
