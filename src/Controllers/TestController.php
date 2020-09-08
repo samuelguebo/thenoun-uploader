@@ -1,5 +1,7 @@
 <?php namespace Thenoun\Controllers;
 
+use Thenoun\Utils\OAuth;
+
 /**
  * Controller handling homepage
  */
@@ -11,11 +13,14 @@ class TestController extends AbstractController {
 	 * @return void
 	 */
 	public function test( $request ) {
-		header( "Content-Type: Application/json" );
+		/* header( "Content-Type: Application/json" );
 
 		$response = [];
 		$response['text'] = [ "echo 'Lorem ipsum dolor", $request ];
 		echo json_encode( $response );
+		*/
+		$oauth = new OAuth();
+		$oauth->fetchAccessToken();
 	}
 
 	/**
