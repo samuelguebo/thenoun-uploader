@@ -59,10 +59,12 @@ class Router {
 	 * @return void
 	 */
 	public static function getCookie( $key ) {
-		session_start();
+		if ( !isset( $_SESSION ) ) {
+			session_start();
+		}
 		self::$session = $_SESSION;
-		session_write_close();
-
+		// session_write_close();
+		// Logger::log( [ "in getCookie", $_SESSION ] );
 		if ( isset( self::$session[$key] ) ) {
 			return self::$session[$key];
 		}
@@ -86,12 +88,22 @@ class Router {
 	 * @return void
 	 */
 	public static function setCookie( $key, $value ) {
-		session_start();
-
-		if ( isset( $_SESSION[$key] ) ) {
-			$_SESSION[$key] = $value;
+		if ( !isset( $_SESSION ) ) {
+			session_start();
 		}
-		session_write_close();
+		$_SESSION[$key] = $value;
+		// Logger::log( [ "in setCookie", $_SESSION ] );
+		// session_write_close();
 	}
 
+	/**
+	 * resetSession
+	 *
+	 * @return void
+	 */
+	public static function resetSession() {
+		if ( !isset( $_SESSION ) ) {
+			session_destroy();
+		}
+	}
 }
