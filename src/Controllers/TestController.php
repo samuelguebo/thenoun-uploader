@@ -1,5 +1,6 @@
 <?php namespace Thenoun\Controllers;
 
+use Exception;
 use Thenoun\Utils\OAuth;
 
 /**
@@ -19,8 +20,12 @@ class TestController extends AbstractController {
 		$response['text'] = [ "echo 'Lorem ipsum dolor", $request ];
 		echo json_encode( $response );
 		*/
-		$oauth = new OAuth();
-		$oauth->fetchAccessToken();
+		try {
+			$oauth = new OAuth();
+			$oauth->doAuthorizationRedirect();
+		} catch ( Exception $e ) {
+			echo $e->getMessage();
+		}
 	}
 
 	/**

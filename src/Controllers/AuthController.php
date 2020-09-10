@@ -1,6 +1,7 @@
 <?php namespace Thenoun\Controllers;
 
-use Thenoun\Utils\MediaWiki;
+use Exception;
+use Thenoun\Utils\OAuth;
 use Thenoun\Utils\Router;
 
 /**
@@ -14,8 +15,12 @@ class AuthController extends AbstractController {
 	 * @return void
 	 */
 	public function login( $request ) {
-		$mediawiki = new MediaWiki();
-		$mediawiki->doAuthorizationRedirect();
+		try {
+			$oauth = new OAuth();
+			$oauth->doAuthorizationRedirect();
+		} catch ( Exception $e ) {
+			echo $e->getMessage();
+		}
 	}
 
 	/**
@@ -25,13 +30,16 @@ class AuthController extends AbstractController {
 	 * @return void
 	 */
 	public function callback( $request ) {
-		$mediawiki = new MediaWiki();
-		$user = $mediawiki->getProfile();
-
-		header( "Location: /" );
+		$oauth = new OAuth();
+		try {
+			$oauth->getAccessToken();
+			header( "Location: /" );
+		} catch ( Exception $e ) {
+			echo $e->getMessage();
+		}
 	}
 
-	/** unauthorized
+	/**
 	 * unauthorized
 	 *
 	 * @param mixed $request
@@ -49,6 +57,7 @@ class AuthController extends AbstractController {
 	 */
 	public function logout( $request ) {
 		Router::setCookie( 'loggedIn', false );
+		Router::resetSession();
 		header( 'Location: /' );
 	}
 

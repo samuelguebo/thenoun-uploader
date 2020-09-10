@@ -1,6 +1,6 @@
 <?php namespace Thenoun\Controllers;
 
-use Thenoun\Utils\MediaWiki;
+use Thenoun\Utils\OAuth;
 
 /**
  * Controller handling homepage
@@ -14,8 +14,8 @@ class HomeController extends AbstractController {
 	 */
 	public function index( $request = null ) {
 		if ( AuthController::isLoggedIn() ) {
-			$mediawiki = new MediaWiki();
-			$user = $mediawiki->getProfile()->query->userinfo;
+			$oauth = new OAuth();
+			$user = $oauth->getProfile()->query->userinfo;
 			require ROOT . "/src/Views/index.php";
 		} else {
 			require ROOT . "/src/Views/logged-out.php";

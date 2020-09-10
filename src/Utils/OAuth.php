@@ -1,15 +1,17 @@
 <?php namespace Thenoun\Utils;
 
+use Exception;
 use MediaWiki\OAuthClient\Client;
 use MediaWiki\OAuthClient\ClientConfig;
 use MediaWiki\OAuthClient\Consumer;
+use MediaWiki\OAuthClient\Token;
 
 /**
  * OAuth interacting with MediaWiki-based API
  * this its built-in OAuth extension.
  */
 class OAuth {
-	private $mwOAuthUrl = OAUTH_MWURI;
+	private $mwOauthURI = OAUTH_MWURI;
 	private $gUserAgent = OAUTH_UA;
 	private $apiUrl = OAUTH_MWURI . "/w/api.php";
 	private $gConsumerKey = OAUTH_KEY;
@@ -19,57 +21,130 @@ class OAuth {
 	private $errorCode = 200;
 
 	/**
-	 * Printing arbitrary data
-	 * in the browser console
-	 * @param mixed $data
+	 * Request authorization
 	 * @return void
 	 */
-	public static function log( $data ) {
-		// Convert array and object to JSON text
-		if ( is_object( $data ) || is_array( $data ) ) {
-			$data = json_encode( $data );
-		}
-		echo ( "<script>console.log('" . $data . "')</script>" );
+	public function doAuthorizationRedirect() {
+		$token = $this->getRequestToken();
+		$authURI = Router::getCookie( 'authURI' );
+
+		// Redirect to authorization URI
+		header( "Location: $authURI" );
 	}
 
 	/**
-	 * Handle a callback to fetch the access token
+	 * Perform a generic edit
 	 * @return void
 	 */
-	public function fetchAccessToken() {
-		$conf = new ClientConfig( $this->mwOAuthUrl . '/w/index.php?title=Special:OAuth' );
+	public function getProfile() {
+		$client = $this->getClient();
+		$accessToken = new Token(
+			Router::getCookie( 'accessToken' ),
+			Router::getCookie( 'accessSecret' )
+		);
+
+		$res = $client->makeOAuthCall(
+			$accessToken,
+			$this->mwOauthURI . '/w/api.php?action=query&meta=userinfo&format=json'
+		);
+
+		$res = json_decode( $res );
+
+		if ( isset( $res->error->code ) && $res->error->code === 'mwoauth-invalid-authorization' ) {
+			// We're not authorized!
+			echo 'You haven\'t authorized this application yet! Go <a href="' . htmlspecialchars( $_SERVER['SCRIPT_NAME'] ) . '?action=authorize">here</a> to do that.';
+			echo '<hr>';
+			return;
+		}
+
+		if ( !isset( $res->query->userinfo ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
+			exit( 0 );
+		}
+		if ( isset( $res->query->userinfo->anon ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			echo 'Not logged in. (How did that happen?)';
+			exit( 0 );
+		}
+
+		return $res;
+	}
+
+	/**
+	 * getClient
+	 *
+	 * @return void
+	 */
+	private function getClient() {
+		$conf = new ClientConfig( $this->mwOauthURI . '/w/index.php?title=Special:OAuth' );
 		$conf->setConsumer( new Consumer(
 			$this->gConsumerKey,
 			$this->gConsumerSecret
 		) );
 		$client = new Client( $conf );
-		list( $authUrl, $token ) = $client->initiate();
-
-		// Save the access token
-		Router::setcookie( 'tokenKey', $this->gTokenKey = $token->key );
-		Router::setcookie( 'tokenSecret', $this->gTokenSecret = $token->secret );
+		return $client;
 	}
 
 	/**
-	 * Setup the session cookie
+	 * getAccessToken
+	 *
+	 * @return Token access token
+	 */
+	public function getAccessToken() {
+		$client = $this->getClient();
+
+		list( $authURI, $requestToken ) = $client->initiate();
+
+		$oauth_verifier = filter_input( INPUT_GET, 'oauth_verifier' );
+		$requestToken = new Token(
+			Router::getCookie( 'requestToken' ),
+			Router::getCookie( 'requestSecret' ),
+		);
+
+		$token = $client->complete(
+			$requestToken,
+			$oauth_verifier
+		);
+
+		if ( is_object( $token ) && isset( $token->error ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			throw new Exception( 'Error retrieving token: ' . $token->message );
+		}
+		if ( !is_object( $token ) || !isset( $token->key ) || !isset( $token->secret ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			throw new Exception( 'Invalid response from token request' );
+		}
+
+		// Save the access token
+		Router::setcookie( 'loggedIn', true );
+		Router::setcookie( 'accessToken', $token->key );
+		Router::setcookie( 'accessSecret', $token->secret );
+		return $token;
+	}
+
+	/**
+	 * getRequestToken
+	 *
 	 * @return void
 	 */
-	private function updateSessionToken() {
-		// Load the user token (request or access) from the session
-		$this->gTokenKey = '';
-		$this->gTokenSecret = '';
-		session_start();
-		// Logger::log(array("in updateSessionToken", $_SESSION));
-		if ( isset( $_SESSION['tokenKey'] ) ) {
-			$this->gTokenKey = $_SESSION['tokenKey'];
-			$this->gTokenSecret = $_SESSION['tokenSecret'];
-		}
-		session_write_close();
+	private function getRequestToken() {
+		$client = $this->getClient();
+		list( $authURI, $token ) = $client->initiate();
 
-		// Fetch the access token if this is the callback from requesting authorization
-		$oauth_verifier = filter_input( INPUT_GET, 'oauth_verifier' );
-		if ( isset( $oauth_verifier ) && $oauth_verifier ) {
-			$this->fetchAccessToken();
+		if ( is_object( $token ) && isset( $token->error ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			throw new Exception( 'Error retrieving token: ' . $token->message );
 		}
+		if ( !is_object( $token ) || !isset( $token->key ) || !isset( $token->secret ) ) {
+			header( "HTTP/1.1 $this->errorCode Internal Server Error" );
+			throw new Exception( 'Invalid response from token request' );
+		}
+
+		// Save the access token
+		Router::setcookie( 'requestToken', $this->gTokenKey = $token->key );
+		Router::setcookie( 'requestSecret', $this->gTokenSecret = $token->secret );
+		Router::setcookie( 'authURI', $authURI );
+		return $token;
 	}
 }
