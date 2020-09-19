@@ -1,0 +1,75 @@
+<?php
+namespace Thenoun\Config;
+
+/**
+ * Configuration file storing OAUTH settings
+ * and other useful information.
+ * Direct access is disabled
+ */
+
+class Settings {
+
+public static $OAUTH_MWURI = 'https://commons.wikimedia.org';
+public static $OAUTH_CALLBACK_URL = 'http://localhost:5000/auth/mediawiki/callback';
+public static $OAUTH_KEY = '';
+public static $OAUTH_SECRET = '';
+public static $APP_NAME = 'The Noun Uploader';
+public static $APP_URL = 'http://localhost:5000';
+public static $APP_DESCRIPTION = 'Icon uploader for Wikimedia Commons';
+public static $APP_SLOGAN = 'Upload <a href="https://thenounproject.com/">thenoun icons</a> to Wikimedia Commons, a repository with millions of free-use images!';
+
+// Define routes
+public static $ROUTES = [
+	/**
+	 * Home endpoints
+	 */
+	[
+		'endpoint' => '/',
+		'controller' => 'HomeController',
+		'method' => 'index',
+		'protected' => false,
+	],
+	[
+		'endpoint' => '/test',
+		'controller' => 'TestController',
+		'method' => 'test',
+		'protected' => false,
+	],
+	[
+		'endpoint' => '/test-upload',
+		'controller' => 'TestController',
+		'method' => 'upload',
+		'protected' => false,
+	],
+	/**
+	 * Upload endpoints
+	 */
+	[
+		'endpoint' => '/upload',
+		'controller' => 'UploadController',
+		'method' => 'upload',
+		'protected' => true,
+	],
+	/**
+	 * Authentication endpoints
+	 */
+	[
+		'endpoint' => '/login',
+		'controller' => 'AuthController',
+		'method' => 'login',
+		'protected' => false,
+	],
+	[
+		'endpoint' => '/oauth-callback',
+		'controller' => 'AuthController',
+		'method' => 'callback',
+		'protected' => false,
+	],
+	[
+		'endpoint' => '/logout',
+		'controller' => 'AuthController',
+		'method' => 'logout',
+		'protected' => false,
+	],
+];
+}
