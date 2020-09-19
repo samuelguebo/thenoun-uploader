@@ -124,8 +124,10 @@ class Icon {
         let viewBoxReg = new RegExp(/viewBox="(\d[. ]?){1,}"/g)
         let viewBox = this.content.match(viewBoxReg)[0]
         let viewBoxCorners = viewBox.match(new RegExp(/(\d[.]?){1,}/g))
-        let viewBoxTop = viewBoxCorners[viewBoxCorners.length - 2]
-        let newViewBox = `viewBox="0 0 ${viewBoxTop} ${viewBoxTop}"`
+        let viewBoxWidth = parseInt(viewBoxCorners[viewBoxCorners.length - 2])
+        let viewBoxHeight = parseInt(viewBoxCorners[viewBoxCorners.length - 1])
+        let viewBoxMax = (viewBoxHeight > viewBoxWidth) ? viewBoxHeight : viewBoxWidth
+        let newViewBox = `viewBox="0 0 ${viewBoxMax} ${viewBoxMax}"`
 
         // update viewBox in svg content
         this.content = this.content.replace(viewBoxReg, newViewBox)
