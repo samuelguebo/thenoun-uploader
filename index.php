@@ -12,7 +12,6 @@ define( 'ROOT', __DIR__ );
 
 // Autoloading and global settings
 require ROOT . '/vendor/autoload.php';
-require ROOT . '/src/Config/settings.php';
 
 // Handle dispatching
 $router = ( new Router( Settings::$ROUTES ) )->dispatch();
