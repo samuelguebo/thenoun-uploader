@@ -1,5 +1,6 @@
 <?php
 
+use Thenoun\Config\Settings;
 use Thenoun\Utils\Router;
 
 /**
@@ -14,4 +15,4 @@ require ROOT . '/vendor/autoload.php';
 require ROOT . '/src/Config/settings.php';
 
 // Handle dispatching
-$router = ( new Router( ROUTES ) )->dispatch();
+$router = ( new Router( Settings::$ROUTES ) )->dispatch();

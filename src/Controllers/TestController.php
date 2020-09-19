@@ -1,6 +1,7 @@
 <?php namespace Thenoun\Controllers;
 
 use Exception;
+use Thenoun\Utils\MediaWiki;
 use Thenoun\Utils\OAuth;
 
 /**
@@ -14,15 +15,16 @@ class TestController extends AbstractController {
 	 * @return void
 	 */
 	public function test( $request ) {
-		/* header( "Content-Type: Application/json" );
-
-		$response = [];
-		$response['text'] = [ "echo 'Lorem ipsum dolor", $request ];
-		echo json_encode( $response );
-		*/
 		try {
 			$oauth = new OAuth();
-			$oauth->doAuthorizationRedirect();
+			if ( AuthController::isLoggedIn() ) {
+				$oauth = new OAuth();
+				$mediawiki = new MediaWiki();
+				$res = $mediawiki->editPage( 'File:Robot (699) - The Noun Project.svg', '' );
+				var_dump( $res );
+			} else {
+				require ROOT . "/src/Views/logged-out.php";
+			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage();
 		}

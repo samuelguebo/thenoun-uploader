@@ -5,17 +5,13 @@ use MediaWiki\OAuthClient\Client;
 use MediaWiki\OAuthClient\ClientConfig;
 use MediaWiki\OAuthClient\Consumer;
 use MediaWiki\OAuthClient\Token;
+use Thenoun\Config\Settings;
 
 /**
  * OAuth interacting with MediaWiki-based API
  * this its built-in OAuth extension.
  */
 class OAuth {
-	private $mwOauthURI = OAUTH_MWURI;
-	private $gUserAgent = OAUTH_UA;
-	private $apiUrl = OAUTH_MWURI . "/w/api.php";
-	private $gConsumerKey = OAUTH_KEY;
-	private $gConsumerSecret = OAUTH_SECRET;
 	private $gTokenSecret;
 	private $gTokenKey;
 	private $errorCode = 200;
@@ -45,7 +41,7 @@ class OAuth {
 
 		$res = $client->makeOAuthCall(
 			$accessToken,
-			$this->mwOauthURI . '/w/api.php?action=query&meta=userinfo&format=json'
+			Settings::$OAUTH_MWURI . '/w/api.php?action=query&meta=userinfo&format=json'
 		);
 
 		$res = json_decode( $res );
@@ -68,6 +64,8 @@ class OAuth {
 			exit( 0 );
 		}
 
+		// Identify
+		$ident = $client->identify( $accessToken );
 		return $res;
 	}
 
@@ -76,11 +74,11 @@ class OAuth {
 	 *
 	 * @return void
 	 */
-	private function getClient() {
-		$conf = new ClientConfig( $this->mwOauthURI . '/w/index.php?title=Special:OAuth' );
+	public function getClient() {
+		$conf = new ClientConfig( Settings::$OAUTH_MWURI . '/w/index.php?title=Special:OAuth' );
 		$conf->setConsumer( new Consumer(
-			$this->gConsumerKey,
-			$this->gConsumerSecret
+			Settings::$OAUTH_KEY,
+			Settings::$OAUTH_SECRET
 		) );
 		$client = new Client( $conf );
 		return $client;
@@ -147,4 +145,5 @@ class OAuth {
 		Router::setcookie( 'authURI', $authURI );
 		return $token;
 	}
+
 }

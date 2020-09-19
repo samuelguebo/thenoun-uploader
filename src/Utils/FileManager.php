@@ -40,16 +40,14 @@ class FileManager {
 			}
 
 			$result = $wiki->uploadFile( $icon );
-			if ( $result != false ) {
-				// Insert wikicode in page
-				$wiki->editPage( $result );
-			}
-			// if there are still no errors, remove the file from folder
-			unlink( $path );
+
 			return $result;
 
 		}catch ( Exception $e ) {
-			return $e->getMessage();
+			return $icon->title . " (" . $e->getMessage() . ")";
+		} finally {
+			// Remove the file from folder
+			unlink( $path );
 		}
 	}
 }

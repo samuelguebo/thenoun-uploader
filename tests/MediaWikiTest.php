@@ -5,16 +5,6 @@ use Thenoun\Utils\MediaWiki;
 
 class MediaWikiTest extends TestCase {
 	/**
-	 * Settings shared across all subtest methods
-	 *
-	 * @return void
-	 */
-	protected function setUp() : void {
-		define( 'ROOT', dirname( __DIR__ ) );
-		require_once ROOT . '/src/Config/settings.php';
-	}
-
-	/**
 	 * testIsFileExistent
 	 *
 	 * @covers \MediaWiki\
