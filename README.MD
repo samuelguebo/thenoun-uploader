@@ -20,7 +20,7 @@ composer update
 ## Configuration
 Rename `settings-sample.php` to `settings.php` and change the parameters according to your Oauth consumer app. 
 
-Checkout [MediaWiki  documentation ](https://www.mediawiki.org/wiki/Help:OAuth) for more details on creating your Oauth credentials.
+Checkout [MediaWiki  documentation ](https://www.mediawiki.org/wiki/OAuth/For_Developers) for more details on creating your Oauth credentials.
 
 ## Quickstart the app
 ```bash
